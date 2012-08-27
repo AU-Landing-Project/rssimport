@@ -125,3 +125,23 @@ function rssimportToggleChecked(){
 		rssimportCheckNone();
 	}
 }
+
+
+// jquery fun
+
+$(document).ready( function() {
+  $('.formtoggle').click(function() {
+  		$('#createrssimportform').toggle(0, function() {
+
+  		});
+	});
+
+	$('.rssimport_toggleupdate').click(function() {
+  		$('#rssimport_updateform').toggle(0, function() {
+
+		  });
+	});
+
+   $('#owner_block_rss_feed').hide();
+   $('#owner_block_bookmark_this').hide();
+});

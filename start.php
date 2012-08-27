@@ -69,8 +69,6 @@ function rssimport_page_handler($page){
 // add links to submenus
 function rssimport_pagesetup() {
 
-	global $CONFIG;
-
 	// Get the page owner entity
 	$page_owner = elgg_get_page_owner_entity();
 	$context = elgg_get_context();
@@ -123,5 +121,5 @@ function rssimport_pagesetup() {
 }
 
 // register for events
-register_elgg_event_handler('init','system','rssimport_init');
-register_elgg_event_handler('pagesetup','system','rssimport_pagesetup');
+elgg_register_event_handler('init','system','rssimport_init');
+elgg_register_event_handler('pagesetup','system','rssimport_pagesetup');

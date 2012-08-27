@@ -19,22 +19,22 @@ $containerid = get_input('containerid');
 //sanity checking
 $rssimport = get_entity($updating_id);
 
-if(!($rssimport instanceof ElggObject)){
+if (!($rssimport instanceof ElggObject)) {
 	register_error(elgg_echo('rssimport:wrong:id'));
 	foward(REFERRER);
 }
 
-if($rssimport->owner_guid != get_loggedin_userid()){
+if ($rssimport->owner_guid != elgg_get_logged_in_user_guid()) {
 	register_error(elgg_echo('rssimport:not:owner'));
 	forward(REFERRER);
 }
 
-if(empty($feedtitle) || empty($feedurl)){
+if (empty($feedtitle) || empty($feedurl)) {
 	register_error(elgg_echo('rssimport:empty:field'));
 	forward(REFERRER);
 }
 
-if($copyright != true){
+if ($copyright != true) {
 	register_error(elgg_echo('rssimport:copyright:error'));
 	forward(REFERRER);
 }
@@ -43,14 +43,14 @@ if($copyright != true){
 
 //update our object
 $rssimport->title = $feedtitle;
-$rssimport->owner_guid = get_loggedin_userid();
+$rssimport->owner_guid = elgg_get_logged_in_user_guid();
 $rssimport->subtype = 'rssimport';
 $rssimport->description = $feedurl;
 $rssimport->access_id = ACCESS_PRIVATE;
 $rssimport->save();
 
 //add our metadata
-if($copyright == true){
+if ($copyright == true) {
 	$rssimport->copyright = true;
 }
 else{

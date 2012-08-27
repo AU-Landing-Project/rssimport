@@ -2,8 +2,6 @@
 
 // this action saves a new import feed
 
-action_gatekeeper();
-
 $_SESSION['rssimport'] = array();
 $_SESSION['rssimport']['feedtitle'] = $feedtitle = get_input('feedtitle');
 $_SESSION['rssimport']['feedurl'] = $feedurl = get_input('feedurl');
@@ -16,12 +14,12 @@ $_SESSION['rssimport']['containerid'] = $containerid = get_input('containerid');
 
 
 //sanity checking
-if(empty($feedtitle) || empty($feedurl)){
+if (empty($feedtitle) || empty($feedurl)) {
 	register_error(elgg_echo('rssimport:empty:field'));
 	forward(REFERRER);
 }
 
-if(empty($copyright)){
+if (empty($copyright)) {
 	register_error(elgg_echo('rssimport:empty:copyright'));
 	forward(REFERRER);
 }
@@ -31,7 +29,7 @@ if(empty($copyright)){
 //create our object
 $rssimport = new ElggObject();
 $rssimport->title = $feedtitle;
-$rssimport->owner_guid = get_loggedin_userid();
+$rssimport->owner_guid = elgg_get_logged_in_user_guid();
 $rssimport->subtype = 'rssimport';
 $rssimport->description = $feedurl;
 $rssimport->access_id = ACCESS_PRIVATE;
@@ -53,5 +51,5 @@ unset($_SESSION['rssimport']);
 
 //set message and send back
 system_message(elgg_echo('rssimport:import:created'));
-$url = $vars['url'] . "pg/rssimport/" . $containerid . "/" . $import_into . "/" . $rssimport->guid;
+$url = elgg_get_site_url() . "rssimport/" . $containerid . "/" . $import_into . "/" . $rssimport->guid;
 forward($url);

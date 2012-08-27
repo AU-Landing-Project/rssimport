@@ -1,7 +1,5 @@
 <?php
 
-action_gatekeeper();
-
 // get our form inputs
 $feedid = get_input('feedid');
 $rssimport = get_entity($feedid);
@@ -10,12 +8,12 @@ $items = explode(',', $itemidstring);
 
 
 //sanity checking
-if(!($rssimport instanceof ElggObject)){
+if (!($rssimport instanceof ElggObject)) {
 	register_error(elgg_echo('rssimport:invalid:id'));
 	forward(REFERRER);
 }
 
-if(empty($itemidstring)){
+if (empty($itemidstring)) {
 	register_error(elgg_echo('rssimport:none:selected'));
 	forward(REFERRER);	
 }
@@ -26,13 +24,12 @@ $cache_location = rssimport_set_simplepie_cache();
 
 // get our feed
 $feed = new SimplePie($rssimport->description, $cache_location);
-$num_posts_in_feed = $feed->get_item_quantity();
 
 $history = array();
 //iterate through and import anything with a matching ID
-foreach ($feed->get_items(0, $num_items) as $item):
-	if(in_array($item->get_id(true), $items)){
-		if(!rssimport_check_for_duplicates($item, $rssimport)){
+foreach ($feed->get_items() as $item):
+	if (in_array($item->get_id(true), $items)) {
+		if (!rssimport_check_for_duplicates($item, $rssimport)) {
 			
 			switch ($rssimport->import_into) {
 					case "blog":

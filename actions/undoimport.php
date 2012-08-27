@@ -1,18 +1,16 @@
 <?php
 
-action_gatekeeper();
-
 $id = get_input('id');
 
-$history = get_annotation($id);
+$history = elgg_get_annotation_from_id($id);
 
 //sanity check
-if(!is_object($history)){
+if (!is_object($history)) {
 	register_error(elgg_echo('rssimport:invalid:history'));
 	forward(REFERRER);	
 }
 
-if($history->owner_guid != get_loggedin_userid()){
+if($history->owner_guid != elgg_get_logged_in_user_guid()){
 	register_error(elgg_echo('rssimport:wrong:permissions'));
 	forward(REFERRER);
 }
@@ -20,8 +18,7 @@ if($history->owner_guid != get_loggedin_userid()){
 
 // so now we know we're the owner, we can go ahead and delete
 $ids = explode(',', $history->value);
-for($i=0; $i<count($ids); $i++){
-	$entity = get_entity($ids[$i]);
+for ($i=0; $i<count($ids); $i++) {
 	delete_entity($ids[$i]);
 }
 

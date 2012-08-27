@@ -1,7 +1,5 @@
 <?php
 
-global $CONFIG;
-
 gatekeeper();
 
 // get our feed object
@@ -9,7 +7,7 @@ $rssimport_id = get_input('rssimport_guid');
 $rssimport = get_entity($rssimport_id);
 
 // make sure we're the owner if selecting a feed
-if($rssimport instanceof ElggObject && get_loggedin_userid() != $rssimport->owner_guid){
+if($rssimport instanceof ElggObject && elgg_get_logged_in_user_guid() != $rssimport->owner_guid){
 	register_error(elgg_echo('rssimport:not:owner'));
 	forward(REFERRER);
 }
@@ -27,21 +25,21 @@ if($rssimport instanceof ElggObject && get_loggedin_userid() != $rssimport->owne
 	
 	$historycount = count($history);
 	$html = "";
-	if($historycount > 0 && !empty($history)){
-		for($i=0; $i<$historycount; $i++){
+	if ($historycount > 0 && !empty($history)) {
+		for ($i=0; $i<$historycount; $i++) {
 			$ids = explode(',', $history[$i]->value);
 			$html .= "<div class=\"rssimport_history_item\">";
 			$html .= "<h4>" . elgg_echo('rssimport:imported:on') . " " . date("F j, Y, g:i a", $history[$i]->time_created) . "<h4>";
 			
 			//create links to each entity imported on that occasion
-			for($j=0; $j<count($ids); $j++){
+			for ($j=0; $j<count($ids); $j++) {
 				$entity = get_entity($ids[$j]);
-				if(is_object($entity)){
+				if (is_object($entity)) {
 					$html .= "<a href=\"" . $entity->getURL() . "\">" . $entity->title . "</a><br>";
 				}
 			}
 			$html .= "<br>";
-			$url = $CONFIG->url . "action/rssimport/undoimport?id=" . $history[$i]->id;
+			$url = elgg_get_site_url() . "action/rssimport/undoimport?id=" . $history[$i]->id;
 			$url = elgg_add_action_tokens_to_url($url);
 			$html .= "<a href=\"$url\" onclick=\"return confirm('" . elgg_echo('rssimport:undo:import:confirm') . "');\">" . elgg_echo('rssimport:undo:import') . "</a>";
 			$html .= "</div><!-- /rssimport_history_item -->";
@@ -63,7 +61,7 @@ if($rssimport instanceof ElggObject && get_loggedin_userid() != $rssimport->owne
 	 */
 	
 // place the form into the elgg layout
-$body = elgg_view_layout('two_column_left_sidebar', $leftarea, $rightarea);
+$body = elgg_view_layout('one_sidebar', array('content' => $leftarea, 'sidebar' => $rightarea));
 
 // display the page
-page_draw($title, $body);
+echo elgg_view_page($title, $body);
