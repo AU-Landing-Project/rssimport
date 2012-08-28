@@ -61,7 +61,7 @@ if($rssimport instanceof ElggObject && elgg_get_logged_in_user_guid() != $rssimp
 	 */
 	
 // place the form into the elgg layout
-$body = elgg_view_layout('one_sidebar', array('content' => $leftarea, 'sidebar' => $rightarea));
+$body = elgg_view_layout('one_sidebar', array('content' => $rightarea, 'sidebar' => $leftarea));
 
 // display the page
 echo elgg_view_page($title, $body);

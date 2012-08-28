@@ -118,9 +118,9 @@ a.rssimport_deletelisting {
 .rssimport_item {
 	padding: 5px;
 	padding-bottom: 20px;
-	border-radius: 5px;
 	background-color: white;
 	margin-top: 20px;
+  border: 1px solid black;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;

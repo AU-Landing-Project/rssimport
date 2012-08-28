@@ -108,7 +108,7 @@ function rssimport_pagesetup() {
 	
 	// create link to "View History" on import page
 	if(elgg_is_logged_in() && $context == "rssimport" && !empty($rssimport_guid)){
-    $item = new ElggMenuItem('rssimport_history', elgg_echo('rssimport:view:history'), 'rssimport/history' . $rssimport_guid);
+    $item = new ElggMenuItem('rssimport_history', elgg_echo('rssimport:view:history'), 'rssimport/history/' . $rssimport_guid);
 		elgg_register_menu_item('page', $item);
 	}
 	

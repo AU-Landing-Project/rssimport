@@ -124,7 +124,7 @@ $leftarea .= "</div>";
 	$selectopts['value'] = $value;
 	$selectopts['options_values'] = array('never' => elgg_echo('rssimport:cron:never'), 'hourly' => elgg_echo('rssimport:cron:hourly'), 'daily' => elgg_echo('rssimport:cron:daily'), 'weekly' => elgg_echo('rssimport:cron:weekly'));
 	$createform .= elgg_echo('rssimport:cron:description') . " ";
-	$createform .= elgg_view('input/pulldown', $selectopts) . "<br>";
+	$createform .= elgg_view('input/dropdown', $selectopts) . "<br>";
 
 	// default access
 	if (defined('ACCESS_DEFAULT')) {
@@ -329,7 +329,7 @@ if ($rssimport instanceof ElggObject) {
 			// date of posting	
 			$rightarea .= "<div class=\"rssimport_date\">";
 			$rightarea .= elgg_echo('rssimport:postedon'); 
-			$rightarea .= $item->get_date('j F Y | g:i a');
+			$rightarea .= $item->get_date('F j, Y | g:i a');
 			$rightarea .= "</div>";
 		
 			$rightarea .= "<div class=\"tags\">";
@@ -391,7 +391,7 @@ $(document).ready(function() {
 unset($_SESSION['rssimport']);
 
 // place the form into the elgg layout
-$body = elgg_view_layout('one_sidebar', array('content' => $leftarea, 'sidebar' => $rightarea));
+$body = elgg_view_layout('one_sidebar', array('content' => $rightarea, 'sidebar' => $leftarea));
 
 // display the page
 echo elgg_view_page($title, $body);

@@ -125,7 +125,9 @@ function rssimport_blog_import($item, $rssimport){
 	$blog->rssimport_id = $item->get_id();
 	$blog->rssimport_permalink = $item->get_permalink();
   $blog->status = 'published';
-  $blog->time_created = time(); var_dump($item->get_date());exit;//$item->get_date() ? $item->get_date() : time();
+  
+  $blog->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
+  $blog->save(); // have to save again to set the new time_created
 	
 	return $blog->guid;	
 }
@@ -174,6 +176,8 @@ function rssimport_bookmarks_import($item, $rssimport){
 			$bookmark->rssimport_token = $token;
 			$bookmark->rssimport_id = $item->get_id();
 			$bookmark->rssimport_permalink = $item->get_permalink();
+      $bookmark->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
+      $bookmark->save(); // save again to set time_created
 			
 			return $bookmark->guid;
 		}
@@ -498,6 +502,8 @@ function rssimport_page_import($item, $rssimport){
 	$page->rssimport_token = $token;
 	$page->rssimport_id = $item->get_id();
 	$page->rssimport_permalink = $item->get_permalink();
+  $page->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
+  $page->save(); // save again to set proper time_created
 	
 	return $page->guid;
 }
