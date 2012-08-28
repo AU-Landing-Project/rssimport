@@ -26,6 +26,8 @@ $cache_location = rssimport_set_simplepie_cache();
 $feed = new SimplePie($rssimport->description, $cache_location);
 
 $history = array();
+$context = elgg_get_context();
+elgg_set_context('rssimport_cron');
 //iterate through and import anything with a matching ID
 foreach ($feed->get_items() as $item):
 	if (in_array($item->get_id(true), $items)) {
@@ -59,6 +61,7 @@ foreach ($feed->get_items() as $item):
 	}
 endforeach;
 
+elgg_set_context($context);
 rssimport_add_to_history($history, $rssimport);
 
 system_message(elgg_echo('rssimport:imported'));

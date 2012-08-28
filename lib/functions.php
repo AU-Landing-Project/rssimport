@@ -142,17 +142,6 @@ function rssimport_bookmarks_import($item, $rssimport){
 		$bookmark->owner_guid = $rssimport->owner_guid;
 		$bookmark->container_guid = $rssimport->containerid;
 		$bookmark->title = $item->get_title();
-		// set the link
-		// don't allow malicious code.
-		// put this in a context of a link so HTMLawed knows how to filter correctly.
-		$xss_test = "<a href=\"" . $item->get_permalink() . "\"></a>";
-		if(function_exists('filter_tags')){
-			if ($xss_test != filter_tags($xss_test)) {
-				register_error(elgg_echo('rssimport:invalid:permalink'));
-				$error = true;
-			}
-		}
-		
 		$bookmark->address = $item->get_permalink();
 		$bookmark->description = $item->get_description();
 		$bookmark->access_id = $rssimport->defaultaccess;
@@ -527,4 +516,12 @@ function rssimport_set_simplepie_cache(){
 	}
 	
 	return $cache_location;
+}
+
+
+// prevent notifications from being sent during an import
+function rssimport_prevent_notification($hook, $type, $return, $params) {
+  if (elgg_get_context() == 'rssimport_cron') {
+    return TRUE;
+  }
 }

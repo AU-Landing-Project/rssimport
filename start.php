@@ -26,6 +26,7 @@ function rssimport_init() {
 	// register our hooks
   elgg_register_plugin_hook_handler('cron', 'all', 'rssimport_cron');
 	elgg_register_plugin_hook_handler('permissions_check', 'all', 'rssimport_permissions_check');
+  elgg_register_plugin_hook_handler('object:notifications', 'all', 'rssimport_prevent_notification', 1000);
 }
 
 
@@ -56,7 +57,7 @@ function rssimport_page_handler($page){
 	else{		//not numeric first option, so must be another page
 		if($page[0] == "history" && is_numeric($page[1])){
 			set_input('rssimport_guid', $page[1]);
-			set_context('rssimport_history');
+			elgg_set_context('rssimport_history');
 			if(!include dirname(__FILE__) . '/pages/history.php'){
 				return FALSE;
 			}

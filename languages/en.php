@@ -4,6 +4,7 @@
 		'rssimport:back:to:blog' => "Back to Blogs",
 		'rssimport:back:to:bookmarks' => "Back to Bookmarks",
 		'rssimport:back:to:pages' => "Back to Pages",
+    'rssimport:back:to:page' => "Back to Pages",
 		'rssimport:blacklist:checked' => "Ignore Checked",
 		'rssimport:blacklisted' => "Item has been deleted, and will not be imported unless undeleted.",
 		'rssimport:blog' => "Blog",
