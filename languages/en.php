@@ -80,6 +80,14 @@
 		'rssimport:view:import' => "View Import",
 		'rssimport:wrong:id' => "Incorrect feed id.",
 		'rssimport:wrong:permissions' => "You don't have permission to do that.",
+      
+      /* Settings */
+      'rssimport:allow:cron' => "Allow users to set imports to happen automatically on a schedule?",
+      'rssimport:allow:cron:hourly' => "Hourly",
+      'rssimport:allow:cron:daily' => "Daily",
+      'rssimport:allow:cron:weekly' => "Weekly",
+      'rssimport:cron:frequency' => "Allowed Import Frequencies",
+
 	);
 					
 	add_translation("en",$english);

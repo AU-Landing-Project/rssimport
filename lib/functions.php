@@ -326,6 +326,8 @@ function rssimport_get_return_url(){
   $current_path = parse_url(current_page_url(), PHP_URL_PATH);
   if ($base_path != '/') {
     $current_path = str_replace($base_path, '', $current_path);
+  } else {
+    $current_path = substr($current_path, 1);
   }
   $parts = explode('/', $current_path);
 	
