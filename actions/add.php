@@ -44,8 +44,8 @@ $rssimport->cron = $cron;
 $rssimport->defaultaccess = $defaultaccess;
 $rssimport->defaulttags = $defaulttags;
 $rssimport->import_into = $import_into;
-// don't want to name it container_guid but that's the function of this
-$rssimport->containerid = $containerid;
+// not a typo - this stores the
+$rssimport->rssimport_containerid = $containerid;
 
 unset($_SESSION['rssimport']);
 

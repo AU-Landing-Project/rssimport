@@ -31,40 +31,81 @@ function rssimport_init() {
 
 
 // page structure for imports <url>/rssimport/<container_guid>/<context>/<rssimport_guid>
-// history: <url>/pg/rssimport/history/<rssimport_guid>
+// history: <url>/pg/rssimport/<container_guid>/<context>/<rssimport_guid>/history
 function rssimport_page_handler($page){
-	
+	gatekeeper();
+  
 	if(is_numeric($page[0])){
+    $container = get_entity($page[0]);
+    if (!$container) {
+      return FALSE;
+    }
+    
+    // set up breadcrumbs
+    if (elgg_instanceof($container, 'user')) {
+      $urlsuffix = 'owner/' . $container->username;
+      $name = $container->username;
+    }
+    elseif (elgg_instanceof($container, 'group')) {
+      $urlsuffix = 'group/' . $container->guid . '/all';
+      $name = $container->name;
+    }
+    $url = elgg_get_site_url() . "{$page[1]}/{$urlsuffix}";
+    
+    // push original context
+    elgg_push_breadcrumb(elgg_echo($page[1]), $url);
+    
+    // push import
+    elgg_push_breadcrumb(elgg_echo('rssimport:import'), elgg_get_site_url() . "rssimport/{$page[0]}/{$page[1]}");
+		
+
+    // we have an rssimport id, set breadcrumbs and page owner
+    if ($page[2]) {
+      $url = '';
+      if (!$rssimport = get_entity($page[2])) {
+        return FALSE;
+      }
+      $name = $rssimport->title;
+      elgg_set_page_owner_guid($rssimport->owner_guid);
+      
+      // page[3] means we're on a history page
+      
+      if ($page[3] && $rssimport->canEdit()) {
+        $url = elgg_get_site_url() . "rssimport/{$page[0]}/{$page[1]}/{$page[2]}";
+      }
+      else {
+        // can't edit the rssimport? Can't see the history...
+        return FALSE;
+      }
+      
+      elgg_push_breadcrumb($name, $url);
+      
+      if ($page[3]) {
+        elgg_push_breadcrumb(elgg_echo('rssimport:history'));
+        
+        // we're checking history
+        set_input('rssimport_guid', $page[1]);
+        elgg_set_context('rssimport_history');
+        if(!include dirname(__FILE__) . '/pages/history.php'){
+          return FALSE;
+        }
+      
+        return TRUE;
+      }
+    }
 	
-		//set import_into based on context
-		//sometimes context is plural, make it match the subtype in the database
-		if($page[1] == 'blog'){ $import_into = "blog"; }
-		if($page[1] == 'blogs'){ $import_into = "blog"; }
-		if($page[1] == 'bookmark'){ $import_into = "bookmarks"; }
-		if($page[1] == 'bookmarks'){ $import_into = "bookmarks"; }
-		if($page[1] == 'pages'){ $import_into = "page"; }
-		if($page[1] == 'page'){ $import_into = "page"; }
-		//first page of "pages" has context of search
-		if($page[1] == "search"){ $import_into = "page"; }
-	
+    // import view or form
 		set_input('container_guid', $page[0]);
-		set_input('import_into', $import_into);
+		set_input('import_into', $page[1]);
 		set_input('rssimport_guid', $page[2]);
 		if(!include dirname(__FILE__) . '/pages/rssimport.php'){
 			return FALSE;
-		}		
-	}
-	else{		//not numeric first option, so must be another page
-		if($page[0] == "history" && is_numeric($page[1])){
-			set_input('rssimport_guid', $page[1]);
-			elgg_set_context('rssimport_history');
-			if(!include dirname(__FILE__) . '/pages/history.php'){
-				return FALSE;
-			}
 		}
+    
+    return TRUE;
 	}
-  
-  return TRUE;
+
+  return FALSE;
 }
 
 // add links to submenus
@@ -108,15 +149,15 @@ function rssimport_pagesetup() {
 	}
 	
 	// create link to "View History" on import page
-	if(elgg_is_logged_in() && $context == "rssimport" && !empty($rssimport_guid)){
+	if(elgg_is_logged_in() && $context == "rssimport" && $rssimport && $rssimport->canEdit()){
     $item = new ElggMenuItem('rssimport_history', elgg_echo('rssimport:view:history'), 'rssimport/history/' . $rssimport_guid);
 		elgg_register_menu_item('page', $item);
 	}
 	
 
 	// create link to "View Import" on history page
-	if(elgg_is_logged_in() && $context == "rssimport_history" && !empty($rssimport_guid)){
-    $item = new ElggMenuItem('rssimport_view', elgg_echo('rssimport:view:import'), 'rssimport/' . $rssimport->containerid . '/' . $rssimport->import_into . '/' . $rssimport_guid);
+	if(elgg_is_logged_in() && $context == "rssimport_history" && $rssimport){
+    $item = new ElggMenuItem('rssimport_view', elgg_echo('rssimport:view:import'), 'history');
 		elgg_register_menu_item('page', $item);
 	}
 }

@@ -14,6 +14,7 @@ if ($rssimport instanceof ElggObject && get_loggedin_userid() != $rssimport->own
 // go ahead and delete
 
 if ($rssimport instanceof ElggObject) {
+  $context = $rssimport->import_into;
 	$rssimport->delete();
 	system_message(elgg_echo('rssimport:delete:success'));
 }

@@ -1,6 +1,5 @@
 <?php
 
-gatekeeper();
 //get our defaults
 $defcontainer_id = get_input('container_guid');
 $import_into = get_input('import_into');
@@ -37,13 +36,13 @@ $leftarea = "<div class=\"rssimport_feedlist\">";
 $leftarea .= "<h4 class=\"rssimport_center\">" . elgg_echo('rssimport:listing') . "</h4><br>";
 
 //get an array of our imports
-$import = get_user_rssimports();
+$import = get_user_rssimports(elgg_get_page_owner_entity());
 
 // iterate through, creating a link for each import
 if (is_array($import)) {
 	$count = count($import);
 	for ($i=0; $i<$count; $i++) {
-		if ($import[$i]->import_into == $import_into && $import[$i]->containerid == $defcontainer_id) {
+		if ($import[$i]->import_into == $import_into && $import[$i]->rssimport_containerid == $defcontainer_id) {
       $deleteurl = elgg_add_action_tokens_to_url(elgg_get_site_url() . "action/rssimport/delete?id=" . $import[$i]->guid);
 		
       $leftarea .= "<div class=\"rssimport_listitem\">";

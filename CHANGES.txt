@@ -1,0 +1,9 @@
+== Version History ==
+
+x.x:
+
+1.0 ():
+ - general code upgrade from unfinished 1.7 version
+ - fixed a number of bugs
+ - moved blacklist to annotations
+ - cleared up some ambiguous terminology

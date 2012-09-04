@@ -3,7 +3,7 @@
 //
 //	this function returns an array of all imports for the logged in user
 //
-function get_user_rssimports($user){
+function get_user_rssimports($user = NULL){
 
 	if (!$user) {
     $user = elgg_get_logged_in_user_entity();
@@ -26,25 +26,9 @@ function get_user_rssimports($user){
 //	These items won't be imported on cron, or visible by default
 //
 function rssimport_add_to_blacklist($items, $rssimport){
-	$blacklist = $rssimport->blacklist;
-	
-	// turn list into an array
-	$blackarray = explode(',', $blacklist);
-	
-	// add new items to the existing array
-	$itemcount = count($items);
-	for ($i=0; $i<$itemcount; $i++) {
-		$blackarray[] = $items[$i];
-	}
-	
-	// make sure we don't have duplicate entries
-	$blackarray = array_unique($blackarray);
-	$blackarray = array_values($blackarray);
-	
-	// reform list from array
-	$blacklist = implode(',', $blackarray);
-	
-	$rssimport->blacklist = $blacklist;
+  foreach ($items as $item_id) {
+    $rssimport->annotate('rssimport_blacklist', $item_id);
+  }
 }
 
 
@@ -80,7 +64,7 @@ function rssimport_blog_import($item, $rssimport){
 	$blog->subtype = "blog";
   $blog->excerpt = elgg_get_excerpt($item->get_content());
 	$blog->owner_guid = $rssimport->owner_guid;
-	$blog->container_guid = $rssimport->containerid;
+	$blog->container_guid = $rssimport->rssimport_containerid;
 	$blog->access_id = $rssimport->defaultaccess;
 	$blog->title = $item->get_title();
 				
@@ -140,7 +124,7 @@ function rssimport_bookmarks_import($item, $rssimport){
 		$bookmark = new ElggObject;
 		$bookmark->subtype = "bookmarks";
 		$bookmark->owner_guid = $rssimport->owner_guid;
-		$bookmark->container_guid = $rssimport->containerid;
+		$bookmark->container_guid = $rssimport->rssimport_containerid;
 		$bookmark->title = $item->get_title();
 		$bookmark->address = $item->get_permalink();
 		$bookmark->description = $item->get_description();
@@ -361,16 +345,13 @@ function rssimport_include_simplepie(){
 
 // returns true if the item has been blacklisted by the current user
 function rssimport_is_blacklisted($item, $rssimport){
-	$blacklist = $rssimport->blacklist;
-	
-	//create array from our list
-	$blackarray = explode(',', $blacklist);
-	
-	if(in_array($item->get_id(true), $blackarray)){
-		return true;
-	}
-	
-	return false;
+  $options = array(
+    'annotation_names' => array('rssimport_blacklist'),
+    'annotation_values' => array($item->get_id(true)),
+    'guids' => $rssimport->guid
+  );
+  
+  return (bool) elgg_get_annotations($options);
 }
 
 
@@ -394,21 +375,17 @@ function rssimport_removeFromArray($value, $array){
 
 // this function removes an item from the blacklist
 function rssimport_remove_from_blacklist($items, $rssimport){
-	$blacklist = $rssimport->blacklist;
-	
-	// turn list into an array
-	$blackarray = explode(',', $blacklist);
-	
-	// remove items from existing array
-	$itemcount = count($items);
-	for ($i=0; $i<$itemcount; $i++) {
-		$blackarray = rssimport_removeFromArray($items[$i], $blackarray);
-	}
-	
-	// reform list from array
-	$blacklist = implode(',', $blackarray);
-	
-	$rssimport->blacklist = $blacklist;
+	$options = array(
+    'annotation_names' => array('rssimport_blacklist'),
+    'annotation_values' => $items,
+    'guids' => $rssimport->guid
+  );
+  
+  $annotations = elgg_get_annotations($options);
+  
+  foreach ($annotations as $annotation) {
+    $annotation->delete();
+  }
 }
 
 
@@ -416,7 +393,7 @@ function rssimport_page_import($item, $rssimport){
 	//check if we have a parent page yet
 	$options = array();
 	$options['type_subtype_pairs'] = array('object' => 'page_top');
-	$options['container_guids'] = $rssimport->containerid;
+	$options['container_guids'] = $rssimport->rssimport_containerid;
 	$options['metadata_name_value_pairs'] = array(array('name' => 'rssimport_feedpage', 'value' => $rssimport->title), array('name' => 'rssimport_url', 'value' => $rssimport->description));
 	$testpage = elgg_get_entities_from_metadata($options);
 	
@@ -424,7 +401,7 @@ function rssimport_page_import($item, $rssimport){
 		//create our parent page
 		$parent = new ElggObject();
 		$parent->subtype = 'page_top';
-		$parent->container_guid = $rssimport->containerid;
+		$parent->container_guid = $rssimport->rssimport_containerid;
 		$parent->owner_guid = $rssimport->owner_guid;
 		$parent->access_id = $rssimport->defaultaccess;
 		$parent->parent_guid = 0;
@@ -451,7 +428,7 @@ function rssimport_page_import($item, $rssimport){
 	//initiate our object
 	$page = new ElggObject();
 	$page->subtype = 'page';
-	$page->container_guid = $rssimport->containerid;
+	$page->container_guid = $rssimport->rssimport_containerid;
 	$page->owner_guid = $rssimport->owner_guid;
 	$page->access_id = $rssimport->defaultaccess;
 	$page->parent_guid = $parent_guid;
