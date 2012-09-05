@@ -40,6 +40,7 @@
 		'rssimport:delete:success' => "The feed was successfully deleted",
 		'rssimport:edit:settings' => "Edit Feed Settings",
 		'rssimport:group' => "Group",
+    'rssimport:history' => "History",
 		'rssimport:ignore:description' => "Ignored items will not be automatically imported and will be invisible on this preview.",
 		'rssimport:import' => "Import",
 		'rssimport:import:lc' => "import",

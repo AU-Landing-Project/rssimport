@@ -32,7 +32,7 @@ $rssimport->title = $feedtitle;
 $rssimport->owner_guid = elgg_get_logged_in_user_guid();
 $rssimport->subtype = 'rssimport';
 $rssimport->description = $feedurl;
-$rssimport->access_id = ACCESS_PRIVATE;
+$rssimport->access_id = ACCESS_LOGGED_IN;
 $rssimport->save();
 
 //add our metadata
@@ -44,12 +44,11 @@ $rssimport->cron = $cron;
 $rssimport->defaultaccess = $defaultaccess;
 $rssimport->defaulttags = $defaulttags;
 $rssimport->import_into = $import_into;
-// not a typo - this stores the
+// not a typo - this stores the guid of the container - either the user or a group
 $rssimport->rssimport_containerid = $containerid;
 
 unset($_SESSION['rssimport']);
 
 //set message and send back
 system_message(elgg_echo('rssimport:import:created'));
-$url = elgg_get_site_url() . "rssimport/" . $containerid . "/" . $import_into . "/" . $rssimport->guid;
-forward($url);
+forward($rssimport->getURL());

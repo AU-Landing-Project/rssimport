@@ -15,11 +15,7 @@ if ($rssimport instanceof ElggObject && elgg_get_logged_in_user_guid() != $rssim
 }
 
 //include simplepie class
-rssimport_include_simplepie();
 $allow_tags = '<a><p><br><b><i><em><del><pre><strong><ul><ol><li><img><hr>';
-
-$cache_location = rssimport_set_simplepie_cache();
-
 
 // set the title
 $title = elgg_echo('rssimport:title');
@@ -210,9 +206,8 @@ $leftarea .= "</div>";
 	$rightarea .= "<hr><br>";
 	
 if ($rssimport instanceof ElggObject) {	
-
 	// Begin showing our feed
-	$feed = new SimplePie($rssimport->description, $cache_location);
+  $feed = rssimport_simplepie_feed($rssimport->description);
 	$num_posts_in_feed = $feed->get_item_quantity();
 	
 	/**
@@ -269,7 +264,7 @@ if ($rssimport instanceof ElggObject) {
 	
 	//Display each item
 	$importablecount = 0;
-	foreach ($feed->get_items(0, $num_items) as $item):
+	foreach ($feed->get_items() as $item):
 		if (!rssimport_already_imported($item, $rssimport)) {
 			// set some convenience variables
 			$importablecount++;

@@ -76,7 +76,7 @@ function rssimportToggle(id){
     
     //now we assign the new value to the input
 	document.getElementById("rssimportImport").value = idarray;
-	document.getElementById("rssimportBlacklist").value = idarray;
+	//document.getElementById("rssimportBlacklist").value = idarray;
 }
 
 function rssimportCheckAll(){
@@ -93,7 +93,7 @@ function rssimportCheckAll(){
 	
 	//now we assign the new value to the input
 	document.getElementById("rssimportImport").value = idarray;
-	document.getElementById("rssimportBlacklist").value = idarray;
+	//document.getElementById("rssimportBlacklist").value = idarray;
 }
 
 function rssimportCheckNone(){
@@ -107,7 +107,7 @@ function rssimportCheckNone(){
 	
 	//now we assign the new value to the input
 	document.getElementById("rssimportImport").value = idarray;
-	document.getElementById("rssimportBlacklist").value = idarray;
+	//document.getElementById("rssimportBlacklist").value = idarray;
 }
 
 function rssimportToggleExcerpt(id){

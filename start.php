@@ -14,8 +14,8 @@ function rssimport_init() {
 	
   //register our actions
   elgg_register_action("rssimport/add", dirname(__FILE__) . "/actions/add.php");
-	elgg_register_action("rssimport/delete", dirname(__FILE__) . "/actions/delete.php");
-	elgg_register_action("rssimport/update", dirname(__FILE__) . "/actions/update.php");
+  elgg_register_action("rssimport/delete", dirname(__FILE__) . "/actions/delete.php");
+  elgg_register_action("rssimport/update", dirname(__FILE__) . "/actions/update.php");
   elgg_register_action("rssimport/import", dirname(__FILE__) . "/actions/import.php");
   elgg_register_action("rssimport/blacklist", dirname(__FILE__) . "/actions/blacklist.php");
   elgg_register_action("rssimport/undoimport", dirname(__FILE__) . "/actions/undoimport.php");
@@ -27,6 +27,9 @@ function rssimport_init() {
   elgg_register_plugin_hook_handler('cron', 'all', 'rssimport_cron');
 	elgg_register_plugin_hook_handler('permissions_check', 'all', 'rssimport_permissions_check');
   elgg_register_plugin_hook_handler('object:notifications', 'all', 'rssimport_prevent_notification', 1000);
+  
+  // create import urls
+  elgg_register_entity_url_handler('object', 'rssimport', 'rssimport_url_handler');
 }
 
 
@@ -68,23 +71,18 @@ function rssimport_page_handler($page){
       $name = $rssimport->title;
       elgg_set_page_owner_guid($rssimport->owner_guid);
       
-      // page[3] means we're on a history page
-      
-      if ($page[3] && $rssimport->canEdit()) {
-        $url = elgg_get_site_url() . "rssimport/{$page[0]}/{$page[1]}/{$page[2]}";
-      }
-      else {
-        // can't edit the rssimport? Can't see the history...
-        return FALSE;
-      }
-      
-      elgg_push_breadcrumb($name, $url);
-      
+
       if ($page[3]) {
+        $url = elgg_get_site_url() . "rssimport/{$page[0]}/{$page[1]}/{$page[2]}";
+        elgg_push_breadcrumb($name, $url);
         elgg_push_breadcrumb(elgg_echo('rssimport:history'));
         
+        if (!$rssimport->canEdit()) {
+          return FALSE;
+        }
+        
         // we're checking history
-        set_input('rssimport_guid', $page[1]);
+        set_input('rssimport_guid', $page[2]);
         elgg_set_context('rssimport_history');
         if(!include dirname(__FILE__) . '/pages/history.php'){
           return FALSE;
@@ -93,14 +91,14 @@ function rssimport_page_handler($page){
         return TRUE;
       }
     }
-	
+      
     // import view or form
-		set_input('container_guid', $page[0]);
-		set_input('import_into', $page[1]);
-		set_input('rssimport_guid', $page[2]);
-		if(!include dirname(__FILE__) . '/pages/rssimport.php'){
-			return FALSE;
-		}
+    set_input('container_guid', $page[0]);
+    set_input('import_into', $page[1]);
+    set_input('rssimport_guid', $page[2]);
+    if(!include dirname(__FILE__) . '/pages/rssimport.php'){
+      return FALSE;
+    }
     
     return TRUE;
 	}
@@ -150,16 +148,24 @@ function rssimport_pagesetup() {
 	
 	// create link to "View History" on import page
 	if(elgg_is_logged_in() && $context == "rssimport" && $rssimport && $rssimport->canEdit()){
-    $item = new ElggMenuItem('rssimport_history', elgg_echo('rssimport:view:history'), 'rssimport/history/' . $rssimport_guid);
+    $item = new ElggMenuItem('rssimport_history', elgg_echo('rssimport:view:history'), $rssimport->getURL() . "/history");
 		elgg_register_menu_item('page', $item);
 	}
 	
 
 	// create link to "View Import" on history page
 	if(elgg_is_logged_in() && $context == "rssimport_history" && $rssimport){
-    $item = new ElggMenuItem('rssimport_view', elgg_echo('rssimport:view:import'), 'history');
+    $item = new ElggMenuItem('rssimport_view', elgg_echo('rssimport:view:import'), $rssimport->getURL());
 		elgg_register_menu_item('page', $item);
 	}
+}
+
+
+// get url for an import
+function rssimport_url_handler($rssimport) {
+  $container = $rssimport->getContainerEntity();
+  
+  return elgg_get_site_url() . "rssimport/{$container->guid}/{$rssimport->import_into}/{$rssimport->guid}";
 }
 
 // register for events

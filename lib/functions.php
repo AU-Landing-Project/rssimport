@@ -231,60 +231,18 @@ function rssimport_cron($hook, $entity_type, $returnvalue, $params){
 	elgg_set_context('rssimport_cron');
 	elgg_set_ignore_access(TRUE);
 	
-	rssimport_include_simplepie();
-	$cache_location = rssimport_set_simplepie_cache();
 	// get array of imports we need to look at
-	$options = array();
-	$options['metadata_name_value_pairs'] = array('name' => 'cron', 'value' => $params['period']);
-	$rssimport = elgg_get_entities_from_metadata($options);	
-	$numimports = count($rssimport);
+	$options = array(
+      'types' => array('object'),
+      'subtypes' => array('rssimport'),
+      'limit' => 0,
+      'metadata_name_value_pairs' => array('name' => 'cron', 'value' => $params['period'])
+  );
+  
+  // using ElggBatch because there may be many, many groups in teh installation
+  // try to avoid oom errors
+  $batch = new ElggBatch('elgg_get_entities_from_metadata', $options, 'rssimport_import_feeds', 25);
 	
-	
-	// iterate through our imports
-	for ($i=0; $i<$numimports; $i++) {
-		if ($rssimport[$i]->getSubtype() == "rssimport") { // make sure we're only dealing with our import objects
-		
-		//get the feed
-		$feed = new SimplePie($rssimport[$i]->description, $cache_location);
-		
-		$history = array();
-		// for each feed, iterate through the items
-		foreach ($feed->get_items(0,0) as $item):
-			if (!rssimport_check_for_duplicates($item, $rssimport[$i]) && !rssimport_is_blacklisted($item, $rssimport[$i])) {
-				// no duplicate entries exist
-				// item isn't blacklisted
-				// import it
-				switch ($rssimport[$i]->import_into) {
-					case "blog":
-						$history[] = rssimport_blog_import($item, $rssimport[$i]);
-						break;
-					case "blogs":
-						$history[] = rssimport_blog_import($item, $rssimport[$i]);
-						break;
-					case "page":
-						$history[] = rssimport_page_import($item, $rssimport[$i]);
-						break;
-					case "pages":
-						$history[] = rssimport_page_import($item, $rssimport[$i]);
-						break;
-					case "bookmark":
-						$history[] = rssimport_bookmarks_import($item, $rssimport[$i]);
-						break;
-					case "bookmarks":
-						$history[] = rssimport_bookmarks_import($item, $rssimport[$i]);
-						break;
-					default:	// when in doubt, send to a blog
-						$history[] = rssimport_blog_import($item, $rssimport[$i]);
-						break;
-				}
-					
-			}
-		endforeach;
-
-		rssimport_add_to_history($history, $rssimport[$i]);
-
-		}
-	}
 	elgg_set_ignore_access(FALSE);
 	elgg_set_context($context);
 }
@@ -333,13 +291,68 @@ function rssimport_get_return_url(){
 	return array($linktext, $backurl);
 }
 
+
+// Imports full feeds - called on cron
+function rssimport_import_feeds($result, $getter, $options){
+  // $result is an rssimport object
+  
+  //get the feed
+	$feed = rssimport_simplepie_feed($result->description);
+  
+  foreach ($feed->get_items(0,0) as $item) {
+			if (!rssimport_check_for_duplicates($item, $result) && !rssimport_is_blacklisted($item, $result)) {
+				// no duplicate entries exist
+				// item isn't blacklisted
+				// import it
+        
+        $history[] = rssimport_import_item($item, $result);					
+			}
+  }
+
+		rssimport_add_to_history($history, $result);
+}
+
+
+// Imports a single item of a feed
+// returns the guid of 
+function rssimport_import_item($item, $rssimport) {
+  switch ($rssimport->import_into) {
+    case "blog":
+      $history = rssimport_blog_import($item, $rssimport);
+      break;
+		case "blogs":
+			$history = rssimport_blog_import($item, $rssimport);
+			break;
+		case "page":
+			$history = rssimport_page_import($item, $rssimport);
+			break;
+		case "pages":
+			$history = rssimport_page_import($item, $rssimport);
+			break;
+		case "bookmark":
+			$history = rssimport_bookmarks_import($item, $rssimport);
+			break;
+		case "bookmarks":
+			$history = rssimport_bookmarks_import($item, $rssimport);
+			break;
+		default:	// when in doubt, send to a blog
+			$history = rssimport_blog_import($item, $rssimport);
+			break;
+	}
+  
+  return $history;
+}
+
+
+
 //
 //	this function includes the simplepie class if it doesn't exist
 //
 function rssimport_include_simplepie(){
 
 	if (!class_exists('SimplePie')) {
-		require_once elgg_get_plugins_path() . '/rssimport/lib/simplepie.inc';
+		//require_once elgg_get_plugins_path() . '/rssimport/lib/simplepie.inc';
+    require_once elgg_get_plugins_path() . 'rssimport/lib/simplepie-1.3.php';
 	}
 }
 
@@ -489,7 +502,7 @@ function rssimport_permissions_check(){
 function rssimport_set_simplepie_cache(){
 
 	// 	set cache for simplepie if it doesn't exist
-	$cache_location = elgg_get_config('dataroot') . '/simplepie_cache/';
+	$cache_location = elgg_get_config('dataroot') . 'simplepie_cache/';
 	if (!file_exists($cache_location)) {
 		mkdir($cache_location, 0777);
 	}
@@ -497,6 +510,20 @@ function rssimport_set_simplepie_cache(){
 	return $cache_location;
 }
 
+//
+// sets up our simplepie feed with caching enabled
+function rssimport_simplepie_feed($url) {
+  rssimport_include_simplepie();
+  $cache_location = rssimport_set_simplepie_cache();
+  
+  $feed = new SimplePie();
+  $feed->set_feed_url($url);
+  $feed->set_cache_location($cache_location);
+  $feed->handle_content_type();
+  $feed->init();
+  
+  return $feed;
+}
 
 // prevent notifications from being sent during an import
 function rssimport_prevent_notification($hook, $type, $return, $params) {

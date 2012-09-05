@@ -18,48 +18,21 @@ if (empty($itemidstring)) {
 	forward(REFERRER);	
 }
 
-//initiate simplepie
-rssimport_include_simplepie();
-$cache_location = rssimport_set_simplepie_cache();
-
 // get our feed
-$feed = new SimplePie($rssimport->description, $cache_location);
+$feed = rssimport_simplepie_feed($rssimport->description);
 
 $history = array();
 $context = elgg_get_context();
 elgg_set_context('rssimport_cron');
 //iterate through and import anything with a matching ID
-foreach ($feed->get_items() as $item):
+foreach ($feed->get_items() as $item) {
 	if (in_array($item->get_id(true), $items)) {
 		if (!rssimport_check_for_duplicates($item, $rssimport)) {
-			
-			switch ($rssimport->import_into) {
-					case "blog":
-						$history[] = rssimport_blog_import($item, $rssimport);
-						break;
-					case "blogs":
-						$history[] = rssimport_blog_import($item, $rssimport);
-						break;
-					case "page":
-						$history[] = rssimport_page_import($item, $rssimport);
-						break;
-					case "pages":
-						$history[] = rssimport_page_import($item, $rssimport);
-						break;
-					case "bookmark":
-						$history[] = rssimport_bookmarks_import($item, $rssimport);
-						break;
-					case "bookmarks":
-						$history[] = rssimport_bookmarks_import($item, $rssimport);
-						break;
-					default:	// when in doubt, send to a blog
-						$history[] = rssimport_blog_import($item, $rssimport);
-						break;
-			}
-			
+      // not a duplicate, selected for import - let's do it
+			$history[] = rssimport_import_item($item, $rssimport);
 		}
 	}
-endforeach;
+}
 
 elgg_set_context($context);
 rssimport_add_to_history($history, $rssimport);
