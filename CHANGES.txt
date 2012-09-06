@@ -13,3 +13,4 @@ x.x:
  - Added breadcrumb navigation
  - Added admin settings for cron import frequency
  - Implemented sticky forms using elgg API
+ - Removed custom graphics in favor of elgg icons

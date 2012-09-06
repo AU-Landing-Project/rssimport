@@ -89,6 +89,9 @@ function rssimport_page_handler($page){
       
         return TRUE;
       }
+      else {
+        elgg_push_breadcrumb($name, $url);
+      }
     }
       
     // import view or form
