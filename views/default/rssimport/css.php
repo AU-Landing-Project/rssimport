@@ -46,9 +46,6 @@
 	margin: 10px;	
 }
 
-.rssimport_feedlist a:hover {
-	background-color: #ededed;	
-}
 
 .rssimport_feedwrapper {
 	padding: 20px;	
@@ -91,7 +88,6 @@ a.rssimport_listing {
 	float: left;
 	width: 140px;
 	padding: 4px;
-	background-color: white;
 	margin: 1px 1px 0 1px; 	
 }
 

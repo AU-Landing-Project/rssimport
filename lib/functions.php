@@ -3,21 +3,26 @@
 //
 //	this function returns an array of all imports for the logged in user
 //
-function get_user_rssimports($user = NULL){
+function get_user_rssimports($user = NULL, $options = array()){
 
-	if (!$user) {
+	if (!elgg_instanceof($user, 'user')) {
     $user = elgg_get_logged_in_user_entity();
     if (!$user) {
       return false;
     }
 	}
 
-	$options = array();
-	$options['owner_guids'] = $user->guid;
-	$options['type_subtype_pairs'] = array('object' => 'rssimport');
-	$options['limit'] = 0;
+	$defaults = array(
+      'types' => array('object'),
+      'subtypes' => array('rssimport'),
+      'owner_guids' => array($user->guid),
+      'metadata_name_value_pairs' => array('name' => 'import_into', 'value' => 'blog'),
+      'limit' => 0
+  );
+  
+  $options = array_merge($defaults, $options);
 
-	return elgg_get_entities($options);
+	return elgg_get_entities_from_metadata($options);
 }
 
 //
