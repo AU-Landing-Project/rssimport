@@ -1,15 +1,13 @@
 <?php
 
 $options = array(
-    'name' => 'params[allow_cron]',
-    'value' => $vars['entity']->allow_cron ? $vars['entity']->allow_cron : 'no',
     'options_values' => array(
         'yes' => elgg_echo('option:yes'),
         'no' => elgg_echo('option:no')
     )
 );
 
-echo elgg_view('input/dropdown', $options) . " " . elgg_echo('rssimport:allow:cron') . "<br><br>";
+echo elgg_echo('rssimport:cron:frequency:explanation') . "<br><br>";
 
 echo "<strong>" . elgg_echo('rssimport:cron:frequency') . "</strong><br>";
 

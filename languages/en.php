@@ -21,14 +21,14 @@
 		'rssimport:delete:confirm' => "This action cannot be undone.  Are you sure you want to delete this import feed?",
 		'rssimport:copyright' => "By importing this feed you assert that you have rights to re-use the content.",
 		'rssimport:copyright:error' => "You must acknowledge that you have the right to use the content of this feed",
-		'rssimport:copyright:warning' => "This tool does not simply display feeds from other sites: it actually imports content from them and re-publishes it on this one. If you do not have the rights to do this you will be breaking the law and you should stop right now. If you are not the owner of the original feed, please ensure that the terms and conditions of the site from which you are downloading content explicitly give you the right to re-publish it. Remember that you are responsible for all content that will be added in your name to this site",
+		'rssimport:copyright:warning' => "This tool does not simply display feeds from other sites: it actually imports content from them and re-publishes it on this one. If you do not have the rights to do this you may be breaking the law and you should stop right now. If you are not the owner of the original feed, please ensure that the terms and conditions of the site from which you are downloading content explicitly give you the right to re-publish it. Remember that you are responsible for all content that will be added in your name to this site",
 		'rssimport:cancel' => "Cancel",
-		'rssimport:cron:description' => "Import schedule",
+		'rssimport:cron:description' => "Import schedule: ",
 		'rssimport:cron:15m' => "15 min",
-		'rssimport:cron:hourly' => "Hour",
-		'rssimport:cron:daily' => "Day",
-		'rssimport:cron:never' => "Never",
-		'rssimport:cron:weekly' => "Week",
+		'rssimport:cron:hourly' => "Hourly",
+		'rssimport:cron:daily' => "Daily",
+		'rssimport:cron:never' => "Manual Import",
+		'rssimport:cron:weekly' => "Weekly",
 		'rssimport:empty:copyright' => "You must acknowledge your understanding and acceptance of the copyright issues involved in importing external content",
 		'rssimport:empty:field' => "Please fill out all fields",
 		'rssimport:defaultaccess:0' => "Private",
@@ -69,6 +69,7 @@
 		'rssimport:page' => "Pages",
 		'rssimport:postedon' => "Posted on ",
 		'rssimport:posted' => "Posted",
+    'rssimport:save:error' => "Feed could not be saved",
 		'rssimport:select:all' => "Select all",
 		'rssimport:tags' => "Tags",
 		'rssimport:unblacklisted' => "Item has been undeleted, it can now be imported",
@@ -83,11 +84,11 @@
 		'rssimport:wrong:permissions' => "You don't have permission to do that.",
       
       /* Settings */
-      'rssimport:allow:cron' => "Allow users to set imports to happen automatically on a schedule?",
       'rssimport:allow:cron:hourly' => "Hourly",
       'rssimport:allow:cron:daily' => "Daily",
       'rssimport:allow:cron:weekly' => "Weekly",
       'rssimport:cron:frequency' => "Allowed Import Frequencies",
+      'rssimport:cron:frequency:explanation' => 'If all import frequencies are disallowed imports can still be achieved manually. These settings only affect automatic scheduled imports.'
 
 	);
 					

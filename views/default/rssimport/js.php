@@ -130,16 +130,14 @@ function rssimportToggleChecked(){
 // jquery fun
 
 $(document).ready( function() {
-  $('.formtoggle').click(function() {
-  		$('#createrssimportform').toggle(0, function() {
-
-  		});
+  $('.rssimport-formtoggle').click( function(event) {
+    event.preventDefault();
+  	$('#createrssimportform').slideToggle();
 	});
 
-	$('.rssimport_toggleupdate').click(function() {
-  		$('#rssimport_updateform').toggle(0, function() {
-
-		  });
+	$('.rssimport_toggleupdate').click( function(event) {
+    event.preventDefault();
+  	$('#rssimport_updateform').slideToggle();
 	});
 
    $('#owner_block_rss_feed').hide();

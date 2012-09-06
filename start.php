@@ -15,7 +15,6 @@ function rssimport_init() {
   //register our actions
   elgg_register_action("rssimport/add", dirname(__FILE__) . "/actions/add.php");
   elgg_register_action("rssimport/delete", dirname(__FILE__) . "/actions/delete.php");
-  elgg_register_action("rssimport/update", dirname(__FILE__) . "/actions/update.php");
   elgg_register_action("rssimport/import", dirname(__FILE__) . "/actions/import.php");
   elgg_register_action("rssimport/blacklist", dirname(__FILE__) . "/actions/blacklist.php");
   elgg_register_action("rssimport/undoimport", dirname(__FILE__) . "/actions/undoimport.php");

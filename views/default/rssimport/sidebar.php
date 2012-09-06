@@ -8,7 +8,7 @@
 
 //get an array of our imports
 $options = array(
-    'container_guids' => array($vars['container_id']),
+    'container_guids' => array($vars['containerid']),
     'metadata_name_value_pairs' => array('name' => 'import_into', 'value' => $vars['import_into']),
 );
 

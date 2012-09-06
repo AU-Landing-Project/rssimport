@@ -1,16 +1,19 @@
 <?php
 
+// save form values in case of failure
+elgg_make_sticky_form('rssimport');
+
 // this action saves a new import feed
 
-$_SESSION['rssimport'] = array();
-$_SESSION['rssimport']['feedtitle'] = $feedtitle = get_input('feedtitle');
-$_SESSION['rssimport']['feedurl'] = $feedurl = get_input('feedurl');
-$_SESSION['rssimport']['copyright'] = $copyright = get_input('copyright');
-$_SESSION['rssimport']['cron'] = $cron = get_input('cron');
-$_SESSION['rssimport']['defaultaccess'] = $defaultaccess = get_input('defaultaccess');
-$_SESSION['rssimport']['defaulttags'] = $defaulttags = get_input('defaulttags');
-$_SESSION['rssimport']['import_into'] = $import_into = get_input('import_into');
-$_SESSION['rssimport']['containerid'] = $containerid = get_input('containerid');
+$feedtitle = get_input('feedtitle');
+$feedurl = get_input('feedurl');
+$copyright = get_input('copyright');
+$cron = get_input('cron');
+$defaultaccess = get_input('defaultaccess');
+$defaulttags = get_input('defaulttags');
+$import_into = get_input('import_into');
+$containerid = get_input('containerid');
+$guid = get_input('guid', false);
 
 
 //sanity checking
@@ -19,27 +22,36 @@ if (empty($feedtitle) || empty($feedurl)) {
 	forward(REFERRER);
 }
 
-if (empty($copyright)) {
+if (!$copyright) {
 	register_error(elgg_echo('rssimport:empty:copyright'));
 	forward(REFERRER);
 }
 
 
 
-//create our object
-$rssimport = new ElggObject();
-$rssimport->title = $feedtitle;
-$rssimport->owner_guid = elgg_get_logged_in_user_guid();
-$rssimport->subtype = 'rssimport';
-$rssimport->description = $feedurl;
-$rssimport->access_id = ACCESS_LOGGED_IN;
-$rssimport->save();
-
-//add our metadata
-if($copyright == true){
-	$rssimport->copyright = true;
+//create/update our object
+$action_type = 'updated';
+if (!($guid && $rssimport = get_entity($guid))) {
+  $action_type = 'created';
+  $rssimport = new ElggObject();
+  $rssimport->subtype = 'rssimport';
 }
 
+$rssimport->title = $feedtitle;
+$rssimport->owner_guid = elgg_get_logged_in_user_guid();
+$rssimport->description = $feedurl;
+$rssimport->access_id = ACCESS_LOGGED_IN;
+
+if (!$rssimport->save()) {
+  register_error('rssimport:save:error');
+  forward(REFERRER);
+}
+
+// saved ok, we don't need to keep form values
+elgg_clear_sticky_form('rssimport');
+
+//add our metadata
+$rssimport->copyright = true;
 $rssimport->cron = $cron;
 $rssimport->defaultaccess = $defaultaccess;
 $rssimport->defaulttags = $defaulttags;
@@ -50,5 +62,5 @@ $rssimport->rssimport_containerid = $containerid;
 unset($_SESSION['rssimport']);
 
 //set message and send back
-system_message(elgg_echo('rssimport:import:created'));
+system_message(elgg_echo('rssimport:import:' . $action_type));
 forward($rssimport->getURL());

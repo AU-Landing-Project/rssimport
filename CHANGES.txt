@@ -11,3 +11,5 @@ x.x:
  - created wrapper functions for simplepie to quick init with caching
  - ElggBatch cron imports to minimize memory with large numbers of feeds
  - Added breadcrumb navigation
+ - Added admin settings for cron import frequency
+ - Implemented sticky forms using elgg API
