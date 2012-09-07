@@ -23,7 +23,6 @@ if ($rssimports) {
   echo "<h4 class=\"rssimport_center\">" . elgg_echo('rssimport:listing') . "</h4><br>";
 
   foreach ($rssimports as $rssimport) {
-      $deleteurl = elgg_add_action_tokens_to_url();
 		
       echo "<div class=\"rssimport_listitem clearfix\">";
       echo elgg_view('output/url', array('href' => $rssimport->getURL(), 'class' => 'rssimport_listing', 'text' => $rssimport->title));
