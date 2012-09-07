@@ -2,7 +2,7 @@
 
 x.x:
 
-1.0 ():
+1.0 (09/07/2012):
  - General code upgrade from unfinished 1.7 version
  - Fixed a number of bugs
  - Moved blacklist to annotations
