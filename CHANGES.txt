@@ -3,12 +3,12 @@
 x.x:
 
 1.0 ():
- - general code upgrade from unfinished 1.7 version
- - fixed a number of bugs
- - moved blacklist to annotations
- - cleared up some ambiguous terminology
- - upgraded simplepie to latest version (1.3)
- - created wrapper functions for simplepie to quick init with caching
+ - General code upgrade from unfinished 1.7 version
+ - Fixed a number of bugs
+ - Moved blacklist to annotations
+ - Cleared up some ambiguous terminology
+ - Upgraded simplepie to latest version (1.3)
+ - Created wrapper functions for simplepie to quick init with caching
  - ElggBatch cron imports to minimize memory with large numbers of feeds
  - Added breadcrumb navigation
  - Added admin settings for cron import frequency
@@ -16,3 +16,4 @@ x.x:
  - Removed custom graphics in favor of elgg icons
  - Moved a lot of inline javascript to an easier to maintain js file
  - Moved much raw javascript to simpler jquery
+ - Deconstructed monolithic page view into more modular views
