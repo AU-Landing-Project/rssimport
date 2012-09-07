@@ -18,6 +18,11 @@ if (empty($itemidstring)) {
 	forward(REFERRER);	
 }
 
+if (!rssimport_content_importable($rssimport)) {
+  register_error(elgg_echo('rssimport:invalid:content:type', array(elgg_echo($rssimport->import_into))));
+  forward(REFERRER);
+}
+
 // get our feed
 $feed = rssimport_simplepie_feed($rssimport->description);
 

@@ -75,14 +75,16 @@ echo "<div class=\"tags\">";
 
 $count = 0;
 $tags = '';
-foreach ($item->get_categories() as $category) {
-  if ($count == 0) {
-    $prefix = "";
+if (is_array($item->get_categories())) {
+  foreach ($item->get_categories() as $category) {
+    if ($count == 0) {
+      $prefix = "";
+    }
+    else {
+      $prefix = ", ";
+    }
+    $tags .= $category->get_label() . ", ";
   }
-  else {
-    $prefix = ", ";
-  }
-  $tags .= $category->get_label() . ", ";
 }
 
 if ($tags) {

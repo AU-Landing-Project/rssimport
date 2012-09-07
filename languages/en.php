@@ -52,6 +52,7 @@
 		'rssimport:imported:on' => "Imported on",
 		'rssimport:imported' => "Items have been imported",
 		'rssimport:into' => "Import into",
+    'rssimport:invalid:content:type' => "Cannot import into the %s content type at this time",
 		'rssimport:invalid:id' => "Invalid RSS Feed",
 		'rssimport:invalid:history' => "Invalid history",
 		'rssimport:invalid:permalink' => "Invalid link.",

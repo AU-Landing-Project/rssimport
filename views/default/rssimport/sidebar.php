@@ -14,7 +14,6 @@ $options = array(
 
 $rssimports = get_user_rssimports(elgg_get_page_owner_entity(), $options);
 
-
 // iterate through, creating a link for each import
 if ($rssimports) {
   

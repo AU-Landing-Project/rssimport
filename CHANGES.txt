@@ -20,3 +20,4 @@ x.x:
  - Set overflow for large images (thanks xkcd...)
  - Don't show label for tags if no tags exist
  - Added support for HTTPS feeds
+ - Prevent imports to content types with disabled plugins

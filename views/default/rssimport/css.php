@@ -161,3 +161,7 @@ a.rssimport_deletelisting {
 .rssimport_title {
   margin-bottom: 5px;
 }
+
+.rssimport-excerpt-toggle {
+  cursor: pointer;
+}
