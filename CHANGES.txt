@@ -17,3 +17,5 @@ x.x:
  - Moved a lot of inline javascript to an easier to maintain js file
  - Moved much raw javascript to simpler jquery
  - Deconstructed monolithic page view into more modular views
+ - Set overflow for large images (thanks xkcd...)
+ - Don't show label for tags if no tags exist

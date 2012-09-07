@@ -72,10 +72,21 @@ echo $item->get_date('F j, Y | g:i a');
 echo "</div>";
 		
 echo "<div class=\"tags\">";
-echo elgg_echo('rssimport:tags') . ": ";
-			
+
+$count = 0;
+$tags = '';
 foreach ($item->get_categories() as $category) {
-  echo $category->get_label() . ", ";
+  if ($count == 0) {
+    $prefix = "";
+  }
+  else {
+    $prefix = ", ";
+  }
+  $tags .= $category->get_label() . ", ";
+}
+
+if ($tags) {
+  echo elgg_echo('rssimport:tags') . ": " . $tags;
 }
 
 echo "</div>";

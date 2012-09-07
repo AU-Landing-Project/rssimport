@@ -71,15 +71,10 @@ $maincontent .= "</div>";
 
 // some items can be imported, so make that div visible
 if($importablecount > 0){
-	$maincontent .= "<script type=\"text/javascript\">
+	$maincontent .= "<script>
 $(document).ready(function() {
-	$('#rssimport_control_box').toggle(0, function(){ });
-});
-</script>";
-
-	$maincontent .= "<script type=\"text/javascript\">
-$(document).ready(function() {
-	$('#rssimport_nothing_to_import').toggle(0, function(){ });
+	$('#rssimport_control_box').toggle(0);
+  $('#rssimport_nothing_to_import').toggle(0);
 });
 </script>";
 }

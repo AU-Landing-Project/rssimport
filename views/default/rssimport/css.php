@@ -120,6 +120,7 @@ a.rssimport_deletelisting {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
+  overflow: auto;
 }
 
 .rssimport_item table {
