@@ -109,12 +109,6 @@ echo elgg_view('input/checkbox', $options);
 echo elgg_echo('rssimport:copyright');
 echo "<br><br>";
 
-// hidden input for containerid - the container_guid of the imported content
-echo elgg_view('input/hidden', array(
-    'name' => 'containerid',
-    'value' => elgg_get_sticky_value('rssimport', 'containerid', $vars['containerid'])
-    ));
-
 
 // hidden input for import_into - the type of content to import into
 echo elgg_view('input/hidden', array(
@@ -122,6 +116,11 @@ echo elgg_view('input/hidden', array(
     'value' => elgg_get_sticky_value('rssimport', 'import_into', $vars['import_into'])
     ));
 
+// hidden input for container_guid
+echo elgg_view('input/hidden', array(
+    'name' => 'container_guid',
+    'value' => elgg_get_sticky_value('rssimport', 'container_guid', $vars['container_guid'])
+));
 
 // are we updating something?
 echo elgg_view('input/hidden', array('name' => 'guid', 'value' => $rssimport->guid));

@@ -12,7 +12,7 @@ $cron = get_input('cron');
 $defaultaccess = get_input('defaultaccess');
 $defaulttags = get_input('defaulttags');
 $import_into = get_input('import_into');
-$containerid = get_input('containerid');
+$container_guid = get_input('container_guid');
 $guid = get_input('guid', false);
 
 
@@ -39,6 +39,7 @@ if (!($guid && $rssimport = get_entity($guid))) {
 
 $rssimport->title = $feedtitle;
 $rssimport->owner_guid = elgg_get_logged_in_user_guid();
+$rssimport->container_guid = $container_guid;
 $rssimport->description = $feedurl;
 $rssimport->access_id = ACCESS_LOGGED_IN;
 
@@ -56,8 +57,6 @@ $rssimport->cron = $cron;
 $rssimport->defaultaccess = $defaultaccess;
 $rssimport->defaulttags = $defaulttags;
 $rssimport->import_into = $import_into;
-// not a typo - this stores the guid of the container - either the user or a group
-$rssimport->rssimport_containerid = $containerid;
 
 unset($_SESSION['rssimport']);
 

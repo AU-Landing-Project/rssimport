@@ -1,7 +1,7 @@
 <?php
 
 //get our defaults
-$containerid = get_input('container_guid');
+$container_guid = get_input('container_guid');
 $import_into = get_input('import_into');
 
 // get our feed object
@@ -18,12 +18,12 @@ if ($rssimport instanceof ElggObject && elgg_get_logged_in_user_guid() != $rssim
 $title = elgg_echo('rssimport:title');
 
 // get the sidebar
-$sidebar = elgg_view('rssimport/sidebar', array('containerid' => $containerid, 'import_into' => $import_into));
+$sidebar = elgg_view('rssimport/sidebar', array('container_guid' => $container_guid, 'import_into' => $import_into));
 
 
 $maincontent = "<div class=\"rssimport_feedwrapper\">";
 
-$container = get_entity($containerid);
+$container = get_entity($container_guid);
 $maincontent .= "<h2>" . elgg_echo("rssimport:import:title", array($container->name, elgg_echo($import_into))) . "</h2>";
 
 $maincontent .= elgg_view_form('rssimport/add',
@@ -31,7 +31,7 @@ $maincontent .= elgg_view_form('rssimport/add',
         array(
             'entity' => $rssimport,
             'import_into' => $import_into,
-            'containerid' => $containerid
+            'container_guid' => $container_guid
             )
         );
 

@@ -66,7 +66,7 @@ function rssimport_blog_import($item, $rssimport){
 	$blog->subtype = "blog";
   $blog->excerpt = elgg_get_excerpt($item->get_content());
 	$blog->owner_guid = $rssimport->owner_guid;
-	$blog->container_guid = $rssimport->rssimport_containerid;
+	$blog->container_guid = $rssimport->container_guid;
 	$blog->access_id = $rssimport->defaultaccess;
 	$blog->title = $item->get_title();
 				
@@ -126,7 +126,7 @@ function rssimport_bookmarks_import($item, $rssimport){
 		$bookmark = new ElggObject;
 		$bookmark->subtype = "bookmarks";
 		$bookmark->owner_guid = $rssimport->owner_guid;
-		$bookmark->container_guid = $rssimport->rssimport_containerid;
+		$bookmark->container_guid = $rssimport->container_guid;
 		$bookmark->title = $item->get_title();
 		$bookmark->address = $item->get_permalink();
 		$bookmark->description = $item->get_description();
@@ -440,7 +440,7 @@ function rssimport_page_import($item, $rssimport){
 	//check if we have a parent page yet
 	$options = array();
 	$options['type_subtype_pairs'] = array('object' => 'page_top');
-	$options['container_guids'] = $rssimport->rssimport_containerid;
+	$options['container_guids'] = array($rssimport->container_guid);
 	$options['metadata_name_value_pairs'] = array(array('name' => 'rssimport_feedpage', 'value' => $rssimport->title), array('name' => 'rssimport_url', 'value' => $rssimport->description));
 	$testpage = elgg_get_entities_from_metadata($options);
 	
@@ -448,7 +448,7 @@ function rssimport_page_import($item, $rssimport){
 		//create our parent page
 		$parent = new ElggObject();
 		$parent->subtype = 'page_top';
-		$parent->container_guid = $rssimport->rssimport_containerid;
+		$parent->container_guid = $rssimport->container_guid;
 		$parent->owner_guid = $rssimport->owner_guid;
 		$parent->access_id = $rssimport->defaultaccess;
 		$parent->parent_guid = 0;
@@ -475,7 +475,7 @@ function rssimport_page_import($item, $rssimport){
 	//initiate our object
 	$page = new ElggObject();
 	$page->subtype = 'page';
-	$page->container_guid = $rssimport->rssimport_containerid;
+	$page->container_guid = $rssimport->container_guid;
 	$page->owner_guid = $rssimport->owner_guid;
 	$page->access_id = $rssimport->defaultaccess;
 	$page->parent_guid = $parent_guid;

@@ -34,3 +34,7 @@ On each import, whether manual or scheduled, the items are checked for duplicati
 to reduce the risk of creating multiple identical entries.  While this has been
 very good in testing, you should note that identical posts from different sources
 will get through.
+
+Each import, whether manual or scheduled, is logged in a history.  The history is
+accessible from the feed page via a link in the side bar.  Each import can be rolled
+back by clicking the 'undo import' link in the history.

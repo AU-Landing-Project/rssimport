@@ -45,6 +45,7 @@ function rssimport_page_handler($page){
     if (!$container) {
       return FALSE;
     }
+    elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
     
     // set up breadcrumbs
     if (elgg_instanceof($container, 'user')) {
