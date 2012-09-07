@@ -174,7 +174,7 @@ function rssimport_check_for_duplicates($item, $rssimport){
 	// look for id first - less resource intensive
 	// this will filter out anything that has already been imported
 	$options = array();
-	$options['container_guids'] = $rssimport->containerid;
+	$options['container_guids'] = $rssimport->container_guid;
 	$options['type_subtype_pairs'] = array('object' => $subtype);
 	$options['metadata_name_value_pairs'] = array('name' => 'rssimport_id', 'value' => $item->get_id());
 	$blogs = elgg_get_entities_from_metadata($options);
@@ -186,7 +186,7 @@ function rssimport_check_for_duplicates($item, $rssimport){
 	// look for permalink
 	// this will filter out anything that has already been imported
 	$options = array();
-	$options['container_guids'] = $rssimport->containerid;
+	$options['container_guids'] = $rssimport->container_guid;
 	$options['type_subtype_pairs'] = array('object' => $subtype);
 	$options['metadata_name_value_pairs'] = array('name' => 'rssimport_permalink', 'value' => $item->get_permalink());
 	$blogs = elgg_get_entities_from_metadata($options);
@@ -199,7 +199,7 @@ function rssimport_check_for_duplicates($item, $rssimport){
 	
 	//check by token - this will filter out anything that was a repost on the feed
 	$options = array();
-	$options['container_guids'] = $rssimport->containerid;
+	$options['container_guids'] = $rssimport->container_guid;
 	$options['type_subtype_pairs'] = array('object' => $subtype);
 	$options['metadata_name_value_pairs'] = array('name' => 'rssimport_token', 'value' => $token);
 	$blogs = elgg_get_entities_from_metadata($options);
@@ -336,10 +336,42 @@ function rssimport_get_return_url(){
 	return array($linktext, $backurl);
 }
 
+/**
+ * returns true/false whether rssimport is allowed for a given group
+ * default - forwards with error message if not allowed
+ * 
+ * @param ElggGroup $group
+ * @param bool $forward
+ * @param string $import_into
+ * @return bool
+ */
+function rssimport_group_gatekeeper($group, $import_into, $forward = TRUE) {
+  if (!elgg_instanceof($group, 'group')) {
+    return TRUE;
+  }
+  
+  $attribute = 'rssimport_' . $import_into . '_enable';
+  if ($group->$attribute != 'no') {
+    return TRUE;
+  }
+  
+  // it's disabled, forward if necessary, otherwise return false
+  if ($forward) {
+    register_error(elgg_echo('rssimport:group:disabled'));
+    forward($group->getURL());
+  }
+  
+  return FALSE;
+}
+
 
 // Imports full feeds - called on cron
 function rssimport_import_feeds($rssimport, $getter, $options){
   if (!rssimport_content_importable($rssimport)) {
+    return;
+  }
+  
+  if (!rssimport_group_gatekeeper($rssimport->getContainerEntity(), $rssimport->import_into, FALSE)) {
     return;
   }
   
@@ -359,7 +391,7 @@ function rssimport_import_feeds($rssimport, $getter, $options){
 
 // Imports a single item of a feed
 // returns the guid of 
-function rssimport_import_item($item, $rssimport) {
+function rssimport_import_item($item, $rssimport) { 
   switch ($rssimport->import_into) {
     case "blog":
       $history = rssimport_blog_import($item, $rssimport);

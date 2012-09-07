@@ -15,9 +15,10 @@ x.x:
  - Implemented sticky forms using elgg API
  - Removed custom graphics in favor of elgg icons
  - Moved a lot of inline javascript to an easier to maintain js file
- - Moved much raw javascript to simpler jquery
+ - Rewrote some ugly javascript as simpler jquery
  - Deconstructed monolithic page view into more modular views
  - Set overflow for large images (thanks xkcd...)
  - Don't show label for tags if no tags exist
  - Added support for HTTPS feeds
  - Prevent imports to content types with disabled plugins
+ - Added group setting to enable/disable import to each content type

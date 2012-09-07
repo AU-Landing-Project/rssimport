@@ -73,14 +73,28 @@ echo elgg_view($view, $options) . $view_suffix;
 
 
 // default access
+// hacky bit specifically for AU - to force default access to group
+$container_guid = get_input('container_guid');
+$container = get_entity($container_guid);
+
+if (elgg_instanceof($container, 'group')) {
+  $context = elgg_get_context();
+  elgg_set_context('group');
+  $page_owner_guid = elgg_get_page_owner_guid();
+  elgg_set_page_owner_guid($container_guid);
+}
+
 echo elgg_echo('rssimport:defaultaccess:description') . " ";
 echo elgg_view('input/access', array(
     'name' => 'defaultaccess',
     'value' => elgg_get_sticky_value('rssimport', 'defaultaccess', $rssimport->defaultaccess)
     ));
-
 echo "<br><br>";
 
+if (elgg_instanceof($container, 'group')) {
+  elgg_set_context($context);
+  elgg_set_page_owner_guid($page_owner_guid);
+}
 
 // default tags textbox
 echo elgg_echo('rssimport:defaulttags') . "<br>";

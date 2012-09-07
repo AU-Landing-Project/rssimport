@@ -32,6 +32,13 @@ function rssimport_init() {
   
   // create import urls
   elgg_register_entity_url_handler('object', 'rssimport', 'rssimport_url_handler');
+  
+  // add group configurations
+  $types = array('blog', 'bookmarks', 'pages');
+  foreach ($types as $type) {
+    add_group_tool_option('rssimport_' . $type, elgg_echo('rssimport:enable'.$type), true);
+  }
+  
 }
 
 
@@ -53,6 +60,7 @@ function rssimport_page_handler($page){
       $name = $container->username;
     }
     elseif (elgg_instanceof($container, 'group')) {
+      rssimport_group_gatekeeper($container, $page[1]);
       $urlsuffix = 'group/' . $container->guid . '/all';
       $name = $container->name;
     }
@@ -72,7 +80,6 @@ function rssimport_page_handler($page){
         return FALSE;
       }
       $name = $rssimport->title;
-      elgg_set_page_owner_guid($rssimport->owner_guid);
       
 
       if ($page[3]) {
@@ -123,27 +130,27 @@ function rssimport_pagesetup() {
 	$createlink = false;
 
 	// Submenu items for group pages, if logged in and context is one of our imports
-	if(elgg_is_logged_in() && in_array($context, array('blog', 'pages', 'bookmarks'))){
+	if (elgg_is_logged_in() && in_array($context, array('blog', 'pages', 'bookmarks'))) {
 		// if we're on a group page, check that the user is a member of the group
-		if(elgg_instanceof($page_owner, 'group', '', 'ElggGroup')){
-			if($page_owner->isMember(elgg_get_logged_in_user_entity())) {
+		if (elgg_instanceof($page_owner, 'group', '', 'ElggGroup')) {
+			if ($page_owner->isMember() && rssimport_group_gatekeeper($page_owner, $context, FALSE)) {
 				$createlink = true;
 			}
 		}
 		
 		// if we are the owner
-		if($page_owner->guid == elgg_get_logged_in_user_guid()){
+		if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
 			$createlink = true;
 		}
 	}
 	
-	if($createlink){
+	if ($createlink) {
     $item = new ElggMenuItem('rssimport', elgg_echo('rssimport:import'), 'rssimport/' . $page_owner->guid . '/' . $context);
 		elgg_register_menu_item('page', $item);
 	}
 	
 	// create "back" link on import page - go back to blogs/pages/etc.
-	if(elgg_is_logged_in() && $context == "rssimport"){
+	if (elgg_is_logged_in() && $context == "rssimport") {
 		//have to parse URL to figure out what page type and owner to send them back to
 		//this function does it, and returns an array('link_text','url')
 		$linkparts = rssimport_get_return_url();
@@ -153,14 +160,14 @@ function rssimport_pagesetup() {
 	}
 	
 	// create link to "View History" on import page
-	if(elgg_is_logged_in() && $context == "rssimport" && $rssimport && $rssimport->canEdit()){
+	if (elgg_is_logged_in() && $context == "rssimport" && $rssimport && $rssimport->canEdit()) {
     $item = new ElggMenuItem('rssimport_history', elgg_echo('rssimport:view:history'), $rssimport->getURL() . "/history");
 		elgg_register_menu_item('page', $item);
 	}
 	
 
 	// create link to "View Import" on history page
-	if(elgg_is_logged_in() && $context == "rssimport_history" && $rssimport){
+	if (elgg_is_logged_in() && $context == "rssimport_history" && $rssimport) {
     $item = new ElggMenuItem('rssimport_view', elgg_echo('rssimport:view:import'), $rssimport->getURL());
 		elgg_register_menu_item('page', $item);
 	}
