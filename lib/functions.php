@@ -518,11 +518,11 @@ function rssimport_set_simplepie_cache(){
 // sets up our simplepie feed with caching enabled
 function rssimport_simplepie_feed($url) {
   rssimport_include_simplepie();
-  //$cache_location = rssimport_set_simplepie_cache();
+  $cache_location = rssimport_set_simplepie_cache();
   
   $feed = new SimplePie();
   $feed->set_feed_url($url);
-  //$feed->set_cache_location($cache_location);
+  $feed->set_cache_location($cache_location);
   $feed->handle_content_type();
   $feed->init();
   

@@ -19,3 +19,4 @@ x.x:
  - Deconstructed monolithic page view into more modular views
  - Set overflow for large images (thanks xkcd...)
  - Don't show label for tags if no tags exist
+ - Added support for HTTPS feeds

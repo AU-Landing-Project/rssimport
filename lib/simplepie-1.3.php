@@ -4269,6 +4269,9 @@ class SimplePie_File
 				curl_setopt($fp, CURLOPT_REFERER, $url);
 				curl_setopt($fp, CURLOPT_USERAGENT, $useragent);
 				curl_setopt($fp, CURLOPT_HTTPHEADER, $headers2);
+        curl_setopt($fp, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($fp, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($fp, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
 				if (!ini_get('open_basedir') && !ini_get('safe_mode') && version_compare(SimplePie_Misc::get_curl_version(), '7.15.2', '>='))
 				{
 					curl_setopt($fp, CURLOPT_FOLLOWLOCATION, 1);
