@@ -14,3 +14,5 @@ x.x:
  - Added admin settings for cron import frequency
  - Implemented sticky forms using elgg API
  - Removed custom graphics in favor of elgg icons
+ - Moved a lot of inline javascript to an easier to maintain js file
+ - Moved much raw javascript to simpler jquery

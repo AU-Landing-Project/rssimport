@@ -10,7 +10,10 @@ function rssimport_init() {
   elgg_extend_view('css/elgg', 'rssimport/css');
   
   // extend js with our own
-  elgg_extend_view('js/elgg', 'rssimport/js');
+  //elgg_extend_view('js/elgg', 'rssimport/js');
+  $js = elgg_get_simplecache_url('js', 'rssimport/js');
+	elgg_register_simplecache_view('js/rssimport/js');
+	elgg_register_js('rssimport.js', $js);
 	
   //register our actions
   elgg_register_action("rssimport/add", dirname(__FILE__) . "/actions/add.php");

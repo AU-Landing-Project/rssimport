@@ -156,3 +156,7 @@ a.rssimport_deletelisting {
 	-webkit-border-radius: 5px;
 	border-radius: 5px; 	
 }
+
+.rssimport_title {
+  margin-bottom: 5px;
+}
