@@ -2,6 +2,9 @@
 
 x.x:
 
+1.1 (09/12/2012):
+ - Fixes write access issue in imported pages
+
 1.0 (09/07/2012):
  - General code upgrade from unfinished 1.7 version
  - Fixed a number of bugs
