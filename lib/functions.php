@@ -484,7 +484,7 @@ function rssimport_page_import($item, $rssimport){
 		$parent->owner_guid = $rssimport->owner_guid;
 		$parent->access_id = $rssimport->defaultaccess;
 		$parent->parent_guid = 0;
-		$parent->write_access_id = $rssimport->defaultaccess;
+		$parent->write_access_id = ACCESS_PRIVATE;
 		$parent->title = $rssimport->title;
 		$parent->description = $rssimport->description;
 		//set default tags
@@ -511,7 +511,7 @@ function rssimport_page_import($item, $rssimport){
 	$page->owner_guid = $rssimport->owner_guid;
 	$page->access_id = $rssimport->defaultaccess;
 	$page->parent_guid = $parent_guid;
-	$page->write_access_id = $rssimport->defaultaccess;
+	$page->write_access_id = ACCESS_PRIVATE;
 	$page->title = $item->get_title();
 	
 	$author = $item->get_author();
