@@ -2,6 +2,14 @@
 
 x.x:
 
+1.2 (09/14/2012):
+ - Moved import navigation to title menu buttons
+ - Changed context of navigation to all pages you own, or have no owner eg. 'all'
+ - AJAX'd item blacklisting, no more page reload/losing your selections
+ - Changed blacklist language string to 'Never Import'
+ - Disabled ssl certificate checking in cURL
+      (was failing for a number of valid feeds, despite bundling the latest mozilla cacert.pem)
+
 1.1 (09/12/2012):
  - Fixes write access issue in imported pages
 
