@@ -50,6 +50,7 @@
 		'rssimport:import:lc' => "import",
 		'rssimport:import:checked' => "Import Checked",
 		'rssimport:import:created' => "Import has been created",
+    'rssimport:import:rss' => "Import RSS Feed",
 		'rssimport:import:selected' => "Import Selected",
     'rssimport:import:title' => "Import into %s's %s",
 		'rssimport:import:updated' => "Import has been updated",
