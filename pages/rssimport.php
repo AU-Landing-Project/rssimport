@@ -21,7 +21,7 @@ $title = elgg_echo('rssimport:title');
 $sidebar = elgg_view('rssimport/sidebar', array('container_guid' => $container_guid, 'import_into' => $import_into));
 
 
-$maincontent = "<div class=\"rssimport_feedwrapper\">";
+$maincontent = "<div id=\"{$rssimport->guid}\" class=\"rssimport_feedwrapper\">";
 
 $container = get_entity($container_guid);
 $maincontent .= "<h2>" . elgg_echo("rssimport:import:title", array($container->name, elgg_echo($import_into))) . "</h2>";

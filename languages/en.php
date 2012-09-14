@@ -38,7 +38,7 @@
 		'rssimport:defaultaccess:1' => "Logged In",
 		'rssimport:defaultaccess:2' => "Public",
 		'rssimport:defaultaccess:description' => "Access level for imported content",
-		'rssimport:delete' => "Prevent Import",
+		'rssimport:delete' => "Never Import",
 		'rssimport:delete:fail' => "The feed could not be deleted.",
 		'rssimport:delete:success' => "The feed was successfully deleted",
 		'rssimport:edit:settings' => "Edit Feed Settings",
@@ -89,6 +89,7 @@
 		'rssimport:view:import' => "View Import",
 		'rssimport:wrong:id' => "Incorrect feed id.",
 		'rssimport:wrong:permissions' => "You don't have permission to do that.",
+    'rssimport:error:ajax' => 'Could not process the request',
       
       /* Settings */
       'rssimport:allow:cron:hourly' => "Hourly",

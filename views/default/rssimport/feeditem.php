@@ -20,7 +20,7 @@ if ($blacklisted) {
 }
 		
 //wrapper div
-echo "<div class=\"rssimport_item" . $class . "\">";
+echo "<div id=\"rssimport-item-" . $itemid . "\" class=\"rssimport_item" . $class . "\">";
 echo "<table><tr><td>";
 
 // 	checkbox here
@@ -29,7 +29,8 @@ echo elgg_view('input/checkbox', array(
     'name' => $checkboxname,
     'default' => false,
     'value' => $itemid,
-    'class' => $checkboxclass
+    'class' => $checkboxclass,
+    'id' => 'checkbox-' . $itemid
     ));
 		
 echo "</td><td>";
@@ -104,8 +105,9 @@ else {
 	$text = elgg_echo('rssimport:delete');
 }
 
-$url = elgg_add_action_tokens_to_url($url);
-echo elgg_view('output/url', array('href' => $url, 'text' => $text));
+echo elgg_view('output/url', array('href' => '#', 'text' => $text, 'id' => 'rssimport-disable-' . $itemid, 'class' => 'rssimport-disable', 'rel' => $itemid));
+
+echo elgg_view('graphics/ajax_loader');
 
 //end of wrapper div
 echo "</div>";
