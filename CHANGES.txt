@@ -2,6 +2,9 @@
 
 x.x:
 
+1.3 (09/18/2012):
+ - fixed issue with title menu navigation appearing in wrong contexts
+
 1.2 (09/14/2012):
  - Moved import navigation to title menu buttons
  - Changed context of navigation to all pages you own, or have no owner eg. 'all'

@@ -127,16 +127,18 @@ function rssimport_pagesetup() {
 	// Get the page owner entity
   $createlink = false;
 	$page_owner = elgg_get_page_owner_entity();
-  if (!$page_owner) {
-    $page_owner = elgg_get_logged_in_user_entity();
-    $createlink = true;
-  }
+  
 	$context = elgg_get_context();
 	$rssimport_guid = get_input('rssimport_guid');
 	$rssimport = get_entity($rssimport_guid);
 
 	// Submenu items for group pages, if logged in and context is one of our imports
-	if (elgg_is_logged_in() && in_array($context, array('blog', 'pages', 'bookmarks'))) {
+	if (elgg_is_logged_in()) {
+    if (!$page_owner) {
+      $page_owner = elgg_get_logged_in_user_entity();
+      $createlink = true;
+    }
+  
 		// if we're on a group page, check that the user is a member of the group
 		if (elgg_instanceof($page_owner, 'group', '', 'ElggGroup')) {
 			if ($page_owner->isMember() && rssimport_group_gatekeeper($page_owner, $context, FALSE)) {
@@ -156,7 +158,8 @@ function rssimport_pagesetup() {
         'name' => 'rssimport',
         'href' => 'rssimport/' . $page_owner->guid . '/' . $context,
         'text' => elgg_echo('rssimport:import:rss'),
-        'class' => 'elgg-button elgg-button-action'
+        'class' => 'elgg-button elgg-button-action',
+        'contexts' => array('blog', 'pages', 'bookmarks')
     ));
 	}
 	
