@@ -99,6 +99,7 @@
       'rssimport:cron:frequency:explanation' => 'If all import frequencies are disallowed imports can still be achieved manually. These settings only affect automatic scheduled imports.',
       
       /* common curl errors */
+      'rssimport:curl:error:default' => 'There was an issue getting your feed.  Please make sure all settings are correct.',
       'rssimport:curl:error:6' => 'Could not find a valid feed at this location.  Please double-check the url.',
       'rssimport:curl:error:7' => 'Cannot connect to the destination network.  Ensure that the location you provided is correct.  If the location uses a non-default protocol (eg. https) it may be due to firewall restrictions on your server.',
 

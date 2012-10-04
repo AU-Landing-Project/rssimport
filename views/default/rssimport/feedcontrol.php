@@ -10,7 +10,10 @@ if (!$feed->get_item_quantity()) {
   if ($feed->error) {
     $error = elgg_echo('rssimport:curl:error:'.$feed->error_num);
     if ($error == 'rssimport:curl:error:'.$feed->error_num) {
-      $error = $feed->error;
+      // we don't have a translation for the error, don't show curl errors to end
+      // users that won't understand them, we'll log it though, for debugging
+      elgg_log($feed->error, 'DEBUG');
+      echo elgg_echo('rssimport:curl:error:default');
     }
     echo $error;
   }
