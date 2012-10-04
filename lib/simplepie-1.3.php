@@ -107,6 +107,7 @@ class SimplePie
 {
 	public $data = array();
 	public $error;
+  public $error_num;
 	public $sanitize;
 	public $useragent = SIMPLEPIE_USERAGENT;
 	public $feed_url;
@@ -699,6 +700,7 @@ class SimplePie
 		if (!$file->success && !($file->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($file->status_code === 200 || $file->status_code > 206 && $file->status_code < 300)))
 		{
 			$this->error = $file->error;
+      $this->error_num = $file->error_num;
 			return !empty($this->data);
 		}
 
@@ -4225,6 +4227,7 @@ class SimplePie_File
 	var $status_code;
 	var $redirects = 0;
 	var $error;
+  var $error_num;
 	var $method = SIMPLEPIE_FILE_SOURCE_NONE;
 
 	public function __construct($url, $timeout = 10, $redirects = 5, $headers = null, $useragent = null, $force_fsockopen = false)
@@ -4285,8 +4288,8 @@ class SimplePie_File
 				}
 				if (curl_errno($fp))
 				{
-					$this->error = curl_error($fp);
           $this->error_num = curl_errno($fp);
+					$this->error = curl_error($fp);
 					$this->success = false;
 				}
 				else
