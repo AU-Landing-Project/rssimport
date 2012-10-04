@@ -4285,7 +4285,8 @@ class SimplePie_File
 				}
 				if (curl_errno($fp))
 				{
-					$this->error = 'cURL error ' . curl_errno($fp) . ': ' . curl_error($fp);
+					$this->error = curl_error($fp);
+          $this->error_num = curl_errno($fp);
 					$this->success = false;
 				}
 				else

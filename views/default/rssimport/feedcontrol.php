@@ -8,7 +8,11 @@ elgg_load_js('rssimport.js');
 // if there are no items, let us know
 if (!$feed->get_item_quantity()) {
   if ($feed->error) {
-    echo "Error: " . $feed->error;
+    $error = elgg_echo('rssimport:curl:error:'.$feed->error_num);
+    if ($error == 'rssimport:curl:error:'.$feed->error_num) {
+      $error = $feed->error;
+    }
+    echo $error;
   }
   else {
     echo elgg_echo('rssimport:no:feed');
