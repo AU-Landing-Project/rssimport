@@ -41,7 +41,7 @@ $rssimport->title = $feedtitle;
 $rssimport->owner_guid = elgg_get_logged_in_user_guid();
 $rssimport->container_guid = $container_guid;
 $rssimport->description = $feedurl;
-$rssimport->access_id = ACCESS_LOGGED_IN;
+$rssimport->access_id = ACCESS_PRIVATE;
 
 if (!$rssimport->save()) {
   register_error('rssimport:save:error');
