@@ -46,8 +46,15 @@ if (!($rssimport instanceof ElggObject)) {
 			}
 			$html .= "<br>";
 			$url = elgg_get_site_url() . "action/rssimport/undoimport?id=" . $history[$i]->id;
-			$url = elgg_add_action_tokens_to_url($url);
-			$html .= "<a href=\"$url\" onclick=\"return confirm('" . elgg_echo('rssimport:undo:import:confirm') . "');\">" . elgg_echo('rssimport:undo:import') . "</a>";
+			//$url = elgg_add_action_tokens_to_url($url);
+			//$html .= "<a href=\"$url\" onclick=\"return confirm('" . elgg_echo('rssimport:undo:import:confirm') . "');\">" . elgg_echo('rssimport:undo:import') . "</a>";
+			
+			$html .= elgg_view('output/confirmlink', array(
+				'href' => $url,
+				'text' => elgg_echo('rssimport:undo:import'),
+				'confirm' => elgg_echo('rssimport:undo:import:confirm'),
+				'class' => 'elgg-button elgg-button-action'
+			));
 			$html .= "</div><!-- /rssimport_history_item -->";
 		}
 	}
