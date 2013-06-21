@@ -2,6 +2,9 @@
 
 x.x:
 
+1.5 (06/21/2013):
+ - adds plugin setting to restrict rssimport to administrators only
+
 1.4 (11/28/2012):
  - added support for friendlier/translatable curl errors
  - forces rssimport objects to ACCESS_PRIVATE
