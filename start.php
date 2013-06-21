@@ -6,6 +6,10 @@ include_once 'lib/functions.php';
 // our init function
 function rssimport_init() {
 
+	if (!rssimport_can_use()) {
+		return;
+	}
+
 	// Extend system CSS with our own styles
   elgg_extend_view('css/elgg', 'rssimport/css');
   
@@ -15,19 +19,20 @@ function rssimport_init() {
 	elgg_register_simplecache_view('js/rssimport/js');
 	elgg_register_js('rssimport.js', $js);
 	
-  //register our actions
-  elgg_register_action("rssimport/add", dirname(__FILE__) . "/actions/add.php");
-  elgg_register_action("rssimport/delete", dirname(__FILE__) . "/actions/delete.php");
-  elgg_register_action("rssimport/import", dirname(__FILE__) . "/actions/import.php");
-  elgg_register_action("rssimport/blacklist", dirname(__FILE__) . "/actions/blacklist.php");
-  elgg_register_action("rssimport/undoimport", dirname(__FILE__) . "/actions/undoimport.php");
+	
+	//register our actions
+	elgg_register_action("rssimport/add", dirname(__FILE__) . "/actions/add.php");
+	elgg_register_action("rssimport/delete", dirname(__FILE__) . "/actions/delete.php");
+	elgg_register_action("rssimport/import", dirname(__FILE__) . "/actions/import.php");
+	elgg_register_action("rssimport/blacklist", dirname(__FILE__) . "/actions/blacklist.php");
+	elgg_register_action("rssimport/undoimport", dirname(__FILE__) . "/actions/undoimport.php");
 
 	// register page handler
 	elgg_register_page_handler('rssimport','rssimport_page_handler');
 	
 	// register our hooks
   elgg_register_plugin_hook_handler('cron', 'all', 'rssimport_cron');
-	elgg_register_plugin_hook_handler('permissions_check', 'all', 'rssimport_permissions_check');
+  elgg_register_plugin_hook_handler('permissions_check', 'all', 'rssimport_permissions_check');
   elgg_register_plugin_hook_handler('object:notifications', 'all', 'rssimport_prevent_notification', 1000);
   
   // create import urls
@@ -41,6 +46,7 @@ function rssimport_init() {
     }
   }
   
+  elgg_register_event_handler('pagesetup','system','rssimport_pagesetup');
 }
 
 
@@ -195,6 +201,26 @@ function rssimport_url_handler($rssimport) {
   return elgg_get_site_url() . "rssimport/{$container->guid}/{$rssimport->import_into}/{$rssimport->guid}";
 }
 
+
+// determine if the logged in user can use rssimport
+function rssimport_can_use() {
+	// admin can always use it
+	if (elgg_is_admin_logged_in()) {
+		return true;
+	}
+
+	// is this a cron call?
+	if (elgg_get_context() == 'cron') {
+		return true;
+	}
+
+	// are we restricting to admin only?
+	if (elgg_get_plugin_setting('adminonly', 'rssimport') == 'yes') {
+		return false;
+	}
+	
+	return true;
+}
+
 // register for events
 elgg_register_event_handler('init','system','rssimport_init');
-elgg_register_event_handler('pagesetup','system','rssimport_pagesetup');

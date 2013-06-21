@@ -97,6 +97,7 @@
       'rssimport:allow:cron:weekly' => "Weekly",
       'rssimport:cron:frequency' => "Allowed Import Frequencies",
       'rssimport:cron:frequency:explanation' => 'If all import frequencies are disallowed imports can still be achieved manually. These settings only affect automatic scheduled imports.',
+	  'rssimport:setting:adminonly' => "Restrict importing rss feeds to administrators only",
       
       /* common curl errors */
       'rssimport:curl:error:default' => 'There was an issue getting your feed.  Please make sure all settings are correct.',

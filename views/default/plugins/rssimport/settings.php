@@ -7,6 +7,10 @@ $options = array(
     )
 );
 
+$options['name'] = 'params[adminonly]';
+$options['value'] = $vars['entity']->adminonly ? $vars['entity']->adminonly : 'no';
+echo elgg_view('input/dropdown', $options) . ' ' . elgg_echo('rssimport:setting:adminonly') . '<br><br>';
+
 echo elgg_echo('rssimport:cron:frequency:explanation') . "<br><br>";
 
 echo "<strong>" . elgg_echo('rssimport:cron:frequency') . "</strong><br>";
