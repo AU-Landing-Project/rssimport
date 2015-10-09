@@ -374,14 +374,7 @@ class RSSImport Extends \ElggObject {
 		$date_format = elgg_echo('rssimport:date:format');
 		$pagebody .= elgg_echo('rssimport:posted') . ": " . $item->get_date($date_format);
 
-		$params = array(
-			'rssimport' => $this,
-			'item' => $item
-		);
-		// Filter content
-		$description = elgg_trigger_plugin_hook_handler('rssimport', 'filter:content', $params, $pagebody);
-
-		$page->description = $description;
+		$page->description = $pagebody;
 
 		//set default tags
 		$tagarray = string_to_tag_array($this->defaulttags);
@@ -406,6 +399,14 @@ class RSSImport Extends \ElggObject {
 		$page->rssimport_permalink = $item->get_permalink();
 		$page->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
 		$page->save(); // save again to set proper time_created
+		
+		// let other plugins have a say in things
+		$params = array(
+			'rssimport' => $this,
+			'item' => $item
+		);
+
+		$page = elgg_trigger_plugin_hook_handler('rssimport', 'import:content', $params, $page);
 
 		return $page->guid;
 	}
@@ -437,13 +438,7 @@ class RSSImport Extends \ElggObject {
 		$date_format = elgg_echo('rssimport:date:format');
 		$pagebody .= elgg_echo('rssimport:posted') . ": " . $item->get_date($date_format);
 
-		$params = array(
-			'rssimport' => $this,
-			'item' => $item
-		);
-		// Filter content
-		$description = elgg_trigger_plugin_hook_handler('rssimport', 'filter:content', $params, $pagebody);
-		$bookmark->description = $description;
+		$bookmark->description = $pagebody;
 
 		$bookmark->access_id = $this->defaultaccess;
 
@@ -465,6 +460,14 @@ class RSSImport Extends \ElggObject {
 		$bookmark->rssimport_permalink = $item->get_permalink();
 		$bookmark->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
 		$bookmark->save(); // save again to set time_created
+		
+		// let other plugins have a say in things
+		$params = array(
+			'rssimport' => $this,
+			'item' => $item
+		);
+
+		$bookmark = elgg_trigger_plugin_hook_handler('rssimport', 'import:content', $params, $bookmark);
 
 		return $bookmark->guid;
 	}
@@ -497,13 +500,7 @@ class RSSImport Extends \ElggObject {
 		$date_format = elgg_echo('rssimport:date:format');
 		$pagebody .= elgg_echo('rssimport:posted') . ": " . $item->get_date($date_format);
 
-		$params = array(
-			'rssimport' => $this,
-			'item' => $item
-		);
-		// Filter content
-		$description = elgg_trigger_plugin_hook_handler('rssimport', 'filter:content', $params, $pagebody);
-		$blog->description = $description;
+		$blog->description = $pagebody;
 
 		//add feed tags to default tags and remove duplicates
 		$tagarray = string_to_tag_array($this->defaulttags);
@@ -534,6 +531,14 @@ class RSSImport Extends \ElggObject {
 		$blog->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
 		$blog->save(); // have to save again to set the new time_created
 
+		// let other plugins have a say in things
+		$params = array(
+			'rssimport' => $this,
+			'item' => $item
+		);
+
+		$blog = elgg_trigger_plugin_hook_handler('rssimport', 'import:content', $params, $blog);
+		
 		return $blog->guid;
 	}
 
