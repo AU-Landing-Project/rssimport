@@ -1,21 +1,17 @@
 <?php
 
-gatekeeper();
+namespace AU\RSSImport;
+
+elgg_gatekeeper();
 
 // get our feed object
 $rssimport_id = get_input('rssimport_guid');
 $rssimport = get_entity($rssimport_id);
 
 // make sure we're the owner if selecting a feed
-if ($rssimport instanceof ElggObject && elgg_get_logged_in_user_guid() != $rssimport->owner_guid) {
+if (!($rssimport instanceof RSSImport) || !$rssimport->canEdit()) {
 	register_error(elgg_echo('rssimport:not:owner'));
 	forward(REFERRER);
-}
-
-// make sure we have a valid rssimport
-if (!($rssimport instanceof ElggObject)) {
-  register_error(elgg_echo('rssimport:invalid:history'));
-  forward(REFERRER);
 }
 
 	/**

@@ -3,7 +3,7 @@
 $rssimport = $vars['entity'];
 $feed = $vars['feed'];
 
-elgg_load_js('rssimport.js');
+elgg_require_js('rssimport');
 	
 // if there are no items, let us know
 if (!$feed->get_item_quantity()) {

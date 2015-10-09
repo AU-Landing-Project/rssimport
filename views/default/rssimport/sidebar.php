@@ -1,4 +1,7 @@
 <?php
+
+namespace AU\RSSImport;
+
 /**
  * This view outputs the links in the sidebar of an rss feed
  * 
@@ -7,12 +10,20 @@
  */
 
 //get an array of our imports
+//@todo grab them all?  scalability?
 $options = array(
+	'type' => 'object',
+	'subtype' => 'rssimport',
+	'owner_guid' => elgg_get_page_owner_guid(),
     'container_guids' => array($vars['container_guid']),
-    'metadata_name_value_pairs' => array('name' => 'import_into', 'value' => $vars['import_into']),
+    'metadata_name_value_pairs' => array(
+		'name' => 'import_into',
+		'value' => $vars['import_into']
+	),
+	'limit' => false
 );
 
-$rssimports = get_user_rssimports(elgg_get_page_owner_entity(), $options);
+$rssimports = elgg_get_entities_from_metadata($options);
 
 // iterate through, creating a link for each import
 if ($rssimports) {
