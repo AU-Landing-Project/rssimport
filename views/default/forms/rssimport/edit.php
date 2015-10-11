@@ -9,12 +9,12 @@ echo "</a></h4><br>";
 
 
 //create the div for the form, hidden if we're viewing a feed, visible if we're adding a new feed
-$initialstyle = $rssimport ? '' : ' style="display:block"';
-echo '<div id="createrssimportform"' . $initialstyle . '>';
+$class = $rssimport ? 'hidden' : '';
+echo '<div id="createrssimportform" class="' . $class . '">';
 
 
 // set up the title
-echo elgg_echo('rssimport:name') . "<br>";
+echo '<label for="feedName">' . elgg_echo('rssimport:name') . "</label>";
 echo elgg_view('input/text', array(
      'name' => 'feedtitle',
      'id' => 'feedName',
@@ -25,7 +25,7 @@ echo "<br><br>";
 
 
 // set up the feed url
-echo elgg_echo('rssimport:url') . "<br>";
+echo '<label for="feedurl">' . elgg_echo('rssimport:url') . "</label>";
 echo elgg_view('input/text', array(
     'name' => 'feedurl',
     'id' => 'feedurl',
@@ -66,7 +66,7 @@ if (count($options['options_values']) <= 1) {
   $view_suffix = '';
 }
 else {
-  echo elgg_echo('rssimport:cron:description') . " ";
+  echo '<label for="feedcron">' . elgg_echo('rssimport:cron:description') . "</label> ";
 }
 
 echo elgg_view($view, $options) . $view_suffix;
@@ -84,7 +84,7 @@ if (elgg_instanceof($container, 'group')) {
   elgg_set_page_owner_guid($container_guid);
 }
 
-echo elgg_echo('rssimport:defaultaccess:description') . " ";
+echo '<label for="defaultaccess">' . elgg_echo('rssimport:defaultaccess:description') . "</label> ";
 echo elgg_view('input/access', array(
     'name' => 'defaultaccess',
     'value' => elgg_get_sticky_value('rssimport', 'defaultaccess', $rssimport->defaultaccess)
@@ -97,7 +97,7 @@ if (elgg_instanceof($container, 'group')) {
 }
 
 // default tags textbox
-echo elgg_echo('rssimport:defaulttags') . "<br>";
+echo '<label for="defaulttags">' . elgg_echo('rssimport:defaulttags') . "</label>";
 echo elgg_view('input/text', array(
     'name' => 'defaulttags',
     'id' => 'defaulttags',
@@ -108,7 +108,11 @@ echo "<br><br>";
 
 
 // copyright checkbox
-echo "<div class=\"rssimport_copyright_warning\">" . elgg_echo('rssimport:copyright:warning') . "</div>";
+echo elgg_view('output/longtext', array(
+	'value' => elgg_echo('rssimport:copyright:warning'),
+	'class' => 'elgg-subtext rssimport_copyright_warning'
+));
+
 $options = array(
     'name' => 'copyright',
     'value' => 1

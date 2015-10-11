@@ -35,12 +35,18 @@ function pagesetup() {
 	}
 
 	if ($createlink) {
+		$contexts = array('blog', 'pages', 'bookmarks');
+		foreach ($contexts as $key => $c) {
+			if (!RSSImport::isContentImportable($c)) {
+				unset($contexts[$key]);
+			}
+		}
 		elgg_register_menu_item('title', array(
 			'name' => 'rssimport',
 			'href' => 'rssimport/' . $page_owner->guid . '/' . $context,
 			'text' => elgg_echo('rssimport:import:rss'),
-			'class' => 'elgg-button elgg-button-action',
-			'contexts' => array('blog', 'pages', 'bookmarks')
+			'link_class' => 'elgg-button elgg-button-action',
+			'contexts' => $contexts
 		));
 	}
 

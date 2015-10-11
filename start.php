@@ -16,7 +16,7 @@ elgg_register_event_handler('init', 'system', __NAMESPACE__ . '\\init');
 function init() {
 
 	// Extend system CSS with our own styles
-	elgg_extend_view('css/elgg', 'rssimport/css');
+	elgg_extend_view('css/elgg', 'css/rssimport');
 
 	if (!RSSImport::canUse()) {
 		return;
@@ -64,8 +64,8 @@ function rssimport_page_handler($page) {
 	elgg_gatekeeper();
 	
 	if ($page[3] == 'history') {
-		elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
-		
+		elgg_set_page_owner_guid($page[0]);
+		set_input('rssimport_guid', $page[2]);
 		$content = elgg_view('resources/rssimport/history', array(
 			'container_guid' => $page[0],
 			'import_into' => $page[1],
@@ -73,6 +73,8 @@ function rssimport_page_handler($page) {
 		));
 	}
 	else {
+		elgg_set_page_owner_guid($page[0]);
+		set_input('rssimport_guid', $page[2]);
 		$content = elgg_view('resources/rssimport/import', array(
 			'container_guid' => $page[0],
 			'import_into' => $page[1],
@@ -86,73 +88,4 @@ function rssimport_page_handler($page) {
 	}
 	
 	return false;
-
-	if (is_numeric($page[0])) {
-		$container = get_entity($page[0]);
-		if (!$container) {
-			return FALSE;
-		}
-		elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
-
-		// set up breadcrumbs
-		if (elgg_instanceof($container, 'user')) {
-			$urlsuffix = 'owner/' . $container->username;
-			$name = $container->username;
-		} elseif (elgg_instanceof($container, 'group')) {
-			RSSImport::groupGatekeeper($container, $page[1]);
-			$urlsuffix = 'group/' . $container->guid . '/all';
-			$name = $container->name;
-		}
-		$url = elgg_get_site_url() . "{$page[1]}/{$urlsuffix}";
-
-		// push original context
-		elgg_push_breadcrumb(elgg_echo($page[1]), $url);
-
-		// push import
-		elgg_push_breadcrumb(elgg_echo('rssimport:import'), "rssimport/{$page[0]}/{$page[1]}");
-
-
-		// we have an rssimport id, set breadcrumbs and page owner
-		if ($page[2]) {
-			$url = '';
-			if (!$rssimport = get_entity($page[2])) {
-				return FALSE;
-			}
-			$name = $rssimport->title;
-
-
-			if ($page[3]) {
-				$url = elgg_get_site_url() . "rssimport/{$page[0]}/{$page[1]}/{$page[2]}";
-				elgg_push_breadcrumb($name, $url);
-				elgg_push_breadcrumb(elgg_echo('rssimport:history'));
-
-				if (!$rssimport->canEdit()) {
-					return FALSE;
-				}
-
-				// we're checking history
-				set_input('rssimport_guid', $page[2]);
-				elgg_set_context('rssimport_history');
-				if (!include dirname(__FILE__) . '/pages/history.php') {
-					return FALSE;
-				}
-
-				return TRUE;
-			} else {
-				elgg_push_breadcrumb($name, $url);
-			}
-		}
-
-		// import view or form
-		set_input('container_guid', $page[0]);
-		set_input('import_into', $page[1]);
-		set_input('rssimport_guid', $page[2]);
-		if (!include dirname(__FILE__) . '/pages/rssimport.php') {
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
-	return FALSE;
 }

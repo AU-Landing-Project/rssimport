@@ -36,7 +36,7 @@ if ($rssimports) {
 		
       echo "<div class=\"rssimport_listitem clearfix\">";
       echo elgg_view('output/url', array('href' => $rssimport->getURL(), 'class' => 'rssimport_listing', 'text' => $rssimport->title));
-      echo elgg_view('output/confirmlink', array(
+      echo elgg_view('output/url', array(
           'href' => elgg_get_site_url() . "action/rssimport/delete?id=" . $rssimport->guid,
           'class' => 'rssimport_deletelisting',
           'text' => '<span class="elgg-icon elgg-icon-delete"></span>',
@@ -45,8 +45,5 @@ if ($rssimports) {
       echo "</div>";
   }
   
-  $sidebar .= "</div>";
+  echo "</div>";
 }
-
-
-echo $sidebar;

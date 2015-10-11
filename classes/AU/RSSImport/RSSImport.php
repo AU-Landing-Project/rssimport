@@ -278,19 +278,20 @@ class RSSImport Extends \ElggObject {
 	 * 
 	 * @return bool
 	 */
-	public function isContentImportable() {
+	static function isContentImportable($import_into = null) {
 		$return = true;
 
-		if (!elgg_is_active_plugin($this->import_into)) {
+		if (!elgg_is_active_plugin($import_into)) {
 			$return = false;
 		}
 
-		if (elgg_get_plugin_setting($this->import_into . '_enable', PLUGIN_ID) != 'yes') {
+		if (elgg_get_plugin_setting($import_into . '_enable', PLUGIN_ID) == 'no') {
 			$return = false;
 		}
 
 		$params = array(
-			'entity' => $this
+			'import_into' => $import_into,
+			'entity' => Self
 		);
 		return elgg_trigger_plugin_hook('rssimport', 'content:importable', $params, $return);
 	}
@@ -406,7 +407,7 @@ class RSSImport Extends \ElggObject {
 			'item' => $item
 		);
 
-		$page = elgg_trigger_plugin_hook_handler('rssimport', 'import:content', $params, $page);
+		$page = elgg_trigger_plugin_hook('rssimport', 'import:content', $params, $page);
 
 		return $page->guid;
 	}
@@ -467,7 +468,7 @@ class RSSImport Extends \ElggObject {
 			'item' => $item
 		);
 
-		$bookmark = elgg_trigger_plugin_hook_handler('rssimport', 'import:content', $params, $bookmark);
+		$bookmark = elgg_trigger_plugin_hook('rssimport', 'import:content', $params, $bookmark);
 
 		return $bookmark->guid;
 	}
@@ -537,7 +538,7 @@ class RSSImport Extends \ElggObject {
 			'item' => $item
 		);
 
-		$blog = elgg_trigger_plugin_hook_handler('rssimport', 'import:content', $params, $blog);
+		$blog = elgg_trigger_plugin_hook('rssimport', 'import:content', $params, $blog);
 		
 		return $blog->guid;
 	}

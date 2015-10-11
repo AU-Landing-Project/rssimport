@@ -23,9 +23,7 @@ function cron($hook, $entity_type, $returnvalue, $params) {
 		)
 	);
 
-	// using ElggBatch because there may be many, many groups in teh installation
-	// try to avoid oom errors
-	//@todo - don't use callback
+
 	$batch = new \ElggBatch('elgg_get_entities_from_metadata', $options);
 
 	foreach ($batch as $rssimport) {

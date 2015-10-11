@@ -1,5 +1,4 @@
 #createrssimportform {
-    display: none;
     padding: 25px;
     background-color: #ececec;
     -moz-border-radius: 5px;
@@ -7,21 +6,8 @@
     border-radius: 5px;		
 }
 
-.rssimport_form_hidden, #rssimport_nothing_to_report, #rssimport_control_box {
-    display: none;	
-}
-
 .rssimport_center {
-    text-align: center;	
-}
-
-.rssimport_clear {
-    height: 1px;
-    clear: both;	
-}
-
-.rssimport_content {
-    display: none;
+    text-align: center;
 }
 
 .rssimport_control {
@@ -46,10 +32,6 @@
     margin: 10px;	
 }
 
-
-.rssimport_feedwrapper {
-    padding: 20px;	
-}
 
 .rssimport_form_control {
     display: inline-block;	

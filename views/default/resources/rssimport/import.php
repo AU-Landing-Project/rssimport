@@ -40,32 +40,22 @@ if ($rssimport) {
 
 // set the title
 $title = elgg_echo('rssimport:title');
+$subtitle = elgg_echo("rssimport:import:title", array($container->name, elgg_echo($import_into)));
 
-// get the sidebar
-$sidebar = elgg_view('rssimport/sidebar', array(
-	'container_guid' => $container_guid,
-	'import_into' => $import_into
-));
-
-//@todo - module?
-$maincontent = "<div class=\"rssimport_feedwrapper\" data-guid=\"{$rssimport->guid}\">";
-
-$maincontent .= "<h2>" . elgg_echo("rssimport:import:title", array($container->name, elgg_echo($import_into))) . "</h2>";
-
-$maincontent .= elgg_view_form('rssimport/edit', array(), array(
+$body = elgg_view_form('rssimport/edit', array(), array(
 	'entity' => $rssimport,
 	'import_into' => $import_into,
 	'container_guid' => $container_guid
 ));
 
 
-$maincontent .= "<hr><br>";
+$body .= "<hr><br>";
 
 if ($rssimport) {
 	// Begin showing our feed
 	$feed = $rssimport->getFeed();
 
-	$maincontent .= elgg_view('rssimport/feedcontrol', array('entity' => $rssimport, 'feed' => $feed));
+	$body .= elgg_view('rssimport/feedcontrol', array('entity' => $rssimport, 'feed' => $feed));
 
 	//Display each item
 	$importablecount = 0;
@@ -73,41 +63,51 @@ if ($rssimport) {
 		if (!$rssimport->isAlreadyImported($item)) {
 			$importablecount++;
 
+			$blacklisted = false;
 			if ($rssimport->isBlacklisted($item)) {
 				$importablecount--;
+				$blacklisted = true;
 			}
 
-			$maincontent .= elgg_view('rssimport/feeditem', array(
+			$body .= elgg_view('rssimport/feeditem', array(
 				'entity' => $rssimport,
 				'blacklisted' => $blacklisted,
 				'item' => $item
 			));
 		}
 	}
-
-	$maincontent .= "</div><!-- rssimport_feedwrapper -->";
 }
 
-$maincontent .= "</div>";
 
 
 // some items can be imported, so make that div visible
 // @todo - AMD
+/*
 if ($importablecount > 0) {
-	$maincontent .= "<script>
+	$body .= "<script>
 $(document).ready(function() {
 	$('#rssimport_control_box').toggle(0);
   $('#rssimport_nothing_to_import').toggle(0);
 });
 </script>";
 }
+ * 
+ */
 
 
-// place the form into the elgg layout
-$body = elgg_view_layout('one_sidebar', array(
-	'content' => $maincontent,
+$content = elgg_view_module('main', $subtitle, $body);
+
+// get the sidebar
+$sidebar = elgg_view('rssimport/sidebar', array(
+	'container_guid' => $container_guid,
+	'import_into' => $import_into
+));
+
+$layout = elgg_view_layout('one_sidebar', array(
+	'title' => $title,
+	'content' => $content,
 	'sidebar' => $sidebar
-		));
+));
 
 // display the page
-echo elgg_view_page($title, $body);
+echo elgg_view_page($title, $layout);

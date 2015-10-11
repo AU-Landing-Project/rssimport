@@ -5,22 +5,21 @@ namespace AU\RSSImport;
 // get our form inputs
 $feedid = get_input('feedid');
 $rssimport = get_entity($feedid);
-$itemidstring = get_input('rssimportImport');
-$items = explode(',', $itemidstring);
+$items = get_input('feeditems');
 
 
 //sanity checking
-if (!($rssimport instanceof RSSImport)) {
+if (!($rssimport instanceof RSSImport) || !$rssimport->canEdit()) {
 	register_error(elgg_echo('rssimport:invalid:id'));
 	forward(REFERRER);
 }
 
-if (empty($itemidstring)) {
+if (!$items) {
 	register_error(elgg_echo('rssimport:none:selected'));
 	forward(REFERRER);
 }
 
-if (!$rssimport->isContentImportable()) {
+if (!$rssimport->isContentImportable($rssimport->import_into)) {
 	register_error(elgg_echo('rssimport:invalid:content:type', array(elgg_echo($rssimport->import_into))));
 	forward(REFERRER);
 }
