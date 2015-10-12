@@ -193,6 +193,7 @@ class RSSImport Extends \ElggObject {
 
 		// give other plugins a chance to import it first
 		// return true to indicate the item has been imported
+		elgg_push_context('rssimport');
 		$params = array(
 			'entity' => $this,
 			'item' => $item
@@ -200,6 +201,7 @@ class RSSImport Extends \ElggObject {
 		$imported = elgg_trigger_plugin_hook('rssimport', 'import', $params, false);
 
 		if ($imported) {
+			elgg_pop_context();
 			return true;
 		}
 
@@ -216,6 +218,7 @@ class RSSImport Extends \ElggObject {
 				break;
 		}
 
+		elgg_pop_context();
 		return $history;
 	}
 
@@ -302,9 +305,8 @@ class RSSImport Extends \ElggObject {
 	 * @param type $item
 	 * @return int
 	 */
-	function importPage($item) {
+	private function importPage($item) {
 		//check if we have a parent page yet
-		//@todo - mark these pages with the guid as title/description could change
 		$options = array(
 			'type' => 'object',
 			'subtype' => 'page_top',
@@ -379,8 +381,11 @@ class RSSImport Extends \ElggObject {
 
 		//set default tags
 		$tagarray = string_to_tag_array($this->defaulttags);
-		foreach ($item->get_categories() as $category) {
-			$tagarray[] = $category->get_label();
+		$categories = $item->get_categories();
+		if (is_array($categories)) {
+			foreach ($categories as $category) {
+				$tagarray[] = $category->get_label();
+			}
 		}
 		$tagarray = array_unique($tagarray);
 		$tagarray = array_values($tagarray);
@@ -400,7 +405,6 @@ class RSSImport Extends \ElggObject {
 		$page->rssimport_permalink = $item->get_permalink();
 		$page->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
 		$page->save(); // save again to set proper time_created
-		
 		// let other plugins have a say in things
 		$params = array(
 			'rssimport' => $this,
@@ -417,7 +421,7 @@ class RSSImport Extends \ElggObject {
 	 * 
 	 * @param type $item
 	 */
-	function importBookmark($item) {
+	private function importBookmark($item) {
 
 		$bookmark = new \ElggObject;
 		$bookmark->subtype = "bookmarks";
@@ -445,8 +449,11 @@ class RSSImport Extends \ElggObject {
 
 		// merge default tags with any from the feed
 		$tagarray = string_to_tag_array($this->defaulttags);
-		foreach ($item->get_categories() as $category) {
-			$tagarray[] = $category->get_label();
+		$categories = $item->get_categories();
+		if (is_array($categories)) {
+			foreach ($categories as $category) {
+				$tagarray[] = $category->get_label();
+			}
 		}
 		$tagarray = array_unique($tagarray);
 		$tagarray = array_values($tagarray);
@@ -461,7 +468,6 @@ class RSSImport Extends \ElggObject {
 		$bookmark->rssimport_permalink = $item->get_permalink();
 		$bookmark->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
 		$bookmark->save(); // save again to set time_created
-		
 		// let other plugins have a say in things
 		$params = array(
 			'rssimport' => $this,
@@ -479,7 +485,7 @@ class RSSImport Extends \ElggObject {
 	 * @param type $item
 	 * @return type
 	 */
-	public function importBlog($item) {
+	private function importBlog($item) {
 		$blog = new \ElggBlog();
 		$blog->excerpt = elgg_get_excerpt($item->get_content());
 		$blog->owner_guid = $this->owner_guid;
@@ -505,8 +511,11 @@ class RSSImport Extends \ElggObject {
 
 		//add feed tags to default tags and remove duplicates
 		$tagarray = string_to_tag_array($this->defaulttags);
-		foreach ($item->get_categories() as $category) {
-			$tagarray[] = $category->get_label();
+		$categories = $item->get_categories();
+		if (is_array($categories)) {
+			foreach ($categories as $category) {
+				$tagarray[] = $category->get_label();
+			}
 		}
 		$tagarray = array_unique($tagarray);
 		$tagarray = array_values($tagarray);
@@ -531,7 +540,6 @@ class RSSImport Extends \ElggObject {
 
 		$blog->time_created = strtotime($item->get_date()) ? strtotime($item->get_date()) : time();
 		$blog->save(); // have to save again to set the new time_created
-
 		// let other plugins have a say in things
 		$params = array(
 			'rssimport' => $this,
@@ -539,7 +547,7 @@ class RSSImport Extends \ElggObject {
 		);
 
 		$blog = elgg_trigger_plugin_hook('rssimport', 'import:content', $params, $blog);
-		
+
 		return $blog->guid;
 	}
 

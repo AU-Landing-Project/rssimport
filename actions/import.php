@@ -28,7 +28,7 @@ if (!$rssimport->isContentImportable($rssimport->import_into)) {
 $feed = $rssimport->getFeed();
 
 $history = array();
-elgg_push_context('rssimport_cron');
+elgg_push_context('rssimport_import');
 //iterate through and import anything with a matching ID
 foreach ($feed->get_items() as $item) {
 	if (in_array($item->get_id(true), $items)) {

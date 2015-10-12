@@ -3,53 +3,45 @@
 namespace AU\RSSImport;
 
 /**
- * Trigger imports
- * 	use $params['period'] to find out which we are on
- * 	eg; $params['period'] = 'hourly'
+ * Hourly cron
+ * 
+ * @param type $hook
+ * @param type $entity_type
+ * @param type $returnvalue
+ * @param type $params
+ * @return type
  */
-function cron($hook, $entity_type, $returnvalue, $params) {
-	// change context for permissions
-	elgg_push_context('rssimport_cron');
-	elgg_set_ignore_access(true);
+function hourly_cron($hook, $entity_type, $returnvalue, $params) {
+	cron_import('hourly');
+	return $returnvalue;
+}
 
-	// get array of imports we need to look at
-	$options = array(
-		'types' => array('object'),
-		'subtypes' => array('rssimport'),
-		'limit' => 0,
-		'metadata_name_value_pairs' => array(
-			'name' => 'cron',
-			'value' => $params['period']
-		)
-	);
+/**
+ * Daily cron
+ * 
+ * @param type $hook
+ * @param type $entity_type
+ * @param type $returnvalue
+ * @param type $params
+ * @return type
+ */
+function daily_cron($hook, $entity_type, $returnvalue, $params) {
+	cron_import('daily');
+	return $returnvalue;
+}
 
-
-	$batch = new \ElggBatch('elgg_get_entities_from_metadata', $options);
-
-	foreach ($batch as $rssimport) {
-		if (!$rssimport->isContentImportable()) {
-			continue;
-		}
-
-		if (!RSSImport::groupGatekeeper($rssimport->getContainerEntity(), $rssimport->import_into, false)) {
-			continue;
-		}
-
-		//get the feed
-		$feed = $rssimport->getFeed();
-
-		$history = array();
-		foreach ($feed->get_items(0, 0) as $item) {
-			if (!$rssimport->isAlreadyImported($item) && !$rssimport->isBlacklisted($item)) {
-				$history[] = $rssimport->importItem($item);
-			}
-		}
-
-		$rssimport->addToHistory($history);
-	}
-
-	elgg_set_ignore_access(false);
-	elgg_pop_context();
+/**
+ * Weekly cron
+ * 
+ * @param type $hook
+ * @param type $entity_type
+ * @param type $returnvalue
+ * @param type $params
+ * @return type
+ */
+function weekly_cron($hook, $entity_type, $returnvalue, $params) {
+	cron_import('weekly');
+	return $returnvalue;
 }
 
 /**
@@ -63,7 +55,7 @@ function cron($hook, $entity_type, $returnvalue, $params) {
  * 
  */
 function permissions_check($hook, $type, $return, $params) {
-	if (elgg_get_context() == 'rssimport_cron') {
+	if (elgg_get_context() == 'rssimport_import') {
 		return true;
 	}
 
@@ -88,4 +80,23 @@ function rssimport_url($hook, $type, $return, $params) {
 	$container = $rssimport->getContainerEntity();
 
 	return elgg_get_site_url() . "rssimport/{$container->guid}/{$rssimport->import_into}/{$rssimport->guid}";
+}
+
+
+/**
+ * called on the 'enqueue', 'notifications' event
+ * we use this to stop rssimports from generating notifications
+ * 
+ * @param type $hook
+ * @param type $type
+ * @param type $return
+ * @param type $params
+ */
+function prevent_notifications($hook, $type, $return, $params) {
+	if ($params['object']->rssimport_id || elgg_get_context('rssimport')) {
+		// this is an rssimport entity, we don't want to notify
+		return false;
+	}
+	
+	return $return;
 }

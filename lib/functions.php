@@ -39,16 +39,6 @@ function rssimport_get_return_url() {
 }
 
 
-// prevent notifications from being sent during an import
-//@todo - how to stop notifications in 1.9?
-function rssimport_prevent_notification($hook, $type, $return, $params) {
-	if (elgg_get_context() == 'rssimport_cron') {
-		return TRUE;
-	}
-}
-
-
-
 // Returns a list of links from an importable item
 function rssimport_get_source($item) {
 	$return = '';
@@ -69,4 +59,56 @@ function rssimport_add_source($item) {
 		return '<p class="rss-source">' . elgg_echo('rssimport:source') . '&nbsp;: ' . $item_source . '<p>';
 	}
 	return '';
+}
+
+
+/**
+ * Import content on cron
+ * @param type $period
+ */
+function cron_import($period) {
+	// change context for permissions
+	elgg_push_context('rssimport_import');
+	elgg_set_ignore_access(true);
+
+	// get array of imports we need to look at
+	$options = array(
+		'types' => array('object'),
+		'subtypes' => array('rssimport'),
+		'limit' => 0,
+		'metadata_name_value_pairs' => array(
+			'name' => 'cron',
+			'value' => $period
+		)
+	);
+
+
+	$batch = new \ElggBatch('elgg_get_entities_from_metadata', $options);
+
+	foreach ($batch as $rssimport) {
+		if (!$rssimport->isContentImportable($rssimport->import_into)) {
+			continue;
+		}
+
+		if (!RSSImport::groupGatekeeper($rssimport->getContainerEntity(), $rssimport->import_into, false)) {
+			continue;
+		}
+
+		//get the feed
+		$feed = $rssimport->getFeed();
+		$history = array();
+		$items = $feed->get_items(0, 0);
+		if (is_array($items)) {
+		foreach ($items as $item) {
+			if (!$rssimport->isAlreadyImported($item) && !$rssimport->isBlacklisted($item)) {
+				$history[] = $rssimport->importItem($item);
+			}
+		}
+		}
+
+		$rssimport->addToHistory($history);
+	}
+
+	elgg_set_ignore_access(false);
+	elgg_pop_context();
 }

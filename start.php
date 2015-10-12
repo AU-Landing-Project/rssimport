@@ -33,12 +33,13 @@ function init() {
 	elgg_register_page_handler('rssimport', __NAMESPACE__ . '\\rssimport_page_handler');
 
 	// register our hooks
-	elgg_register_plugin_hook_handler('cron', 'all', __NAMESPACE__ . '\\cron');
+	elgg_register_plugin_hook_handler('cron', 'daily', __NAMESPACE__ . '\\daily_cron');
+	elgg_register_plugin_hook_handler('cron', 'hourly', __NAMESPACE__ . '\\hourly_cron');
+	elgg_register_plugin_hook_handler('cron', 'weekly', __NAMESPACE__ . '\\weekly_cron');
 	elgg_register_plugin_hook_handler('permissions_check', 'all', __NAMESPACE__ . '\\permissions_check');
 	elgg_register_plugin_hook_handler('entity:url', 'object', __NAMESPACE__ . '\\rssimport_url');
 
-//@todo - how to stop notifications in 1.9?
-//	elgg_register_plugin_hook_handler('object:notifications', 'all', __NAMESPACE__ . 'rssimport_prevent_notification', 1000);
+	elgg_register_plugin_hook_handler('enqueue', 'notification', __NAMESPACE__ . '\\prevent_notifications', 1000);
 
 
 	// add group configurations

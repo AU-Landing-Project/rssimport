@@ -2,9 +2,6 @@
 
 namespace AU\RSSImport;
 
-/**
- * @todo - some of this should be in the page handler
- */
 function pagesetup() {
 	// Get the page owner entity
 	$createlink = false;
