@@ -79,22 +79,6 @@ if ($rssimport) {
 }
 
 
-
-// some items can be imported, so make that div visible
-// @todo - AMD
-/*
-if ($importablecount > 0) {
-	$body .= "<script>
-$(document).ready(function() {
-	$('#rssimport_control_box').toggle(0);
-  $('#rssimport_nothing_to_import').toggle(0);
-});
-</script>";
-}
- * 
- */
-
-
 $content = elgg_view_module('main', $subtitle, $body);
 
 // get the sidebar

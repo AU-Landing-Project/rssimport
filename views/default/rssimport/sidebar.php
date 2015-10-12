@@ -14,7 +14,7 @@ namespace AU\RSSImport;
 $options = array(
 	'type' => 'object',
 	'subtype' => 'rssimport',
-	'owner_guid' => elgg_get_page_owner_guid(),
+	'owner_guid' => elgg_get_logged_in_user_guid(),
     'container_guids' => array($vars['container_guid']),
     'metadata_name_value_pairs' => array(
 		'name' => 'import_into',
