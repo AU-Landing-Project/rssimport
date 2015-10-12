@@ -32,9 +32,6 @@ echo "<br><br>";
 
 // Import tools : enable or disable import for specific tools (besides plugin active)
 echo "<strong>" . elgg_echo('rssimport:grouptools') . "</strong><br />";
-if (!isset($vars['entity']->blog_enable)) $vars['entity']->blog_enable = 'no';
-if (!isset($vars['entity']->bookmarks_enable)) $vars['entity']->bookmarks_enable = 'yes';
-if (!isset($vars['entity']->pages_enable)) $vars['entity']->pages_enable = 'no';
 
 $options['name'] = 'params[blog_enable]';
 $options['value'] = $vars['entity']->blog_enable ? $vars['entity']->blog_enable : 'yes';
