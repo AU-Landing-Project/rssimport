@@ -2,6 +2,9 @@
 
 x.x:
 
+2.0.2 (10/13/2015):
+ - add action tokens to import delete link
+
 2.0.1 (10/12/2015):
  - fix bug preventing non-rssimport notifications
 

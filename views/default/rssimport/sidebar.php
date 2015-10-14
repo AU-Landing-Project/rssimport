@@ -40,6 +40,7 @@ if ($rssimports) {
           'href' => elgg_get_site_url() . "action/rssimport/delete?id=" . $rssimport->guid,
           'class' => 'rssimport_deletelisting',
           'text' => '<span class="elgg-icon elgg-icon-delete"></span>',
+		  'is_action' => true,
           'confirm' => elgg_echo('rssimport:delete:confirm')
       ));
       echo "</div>";
