@@ -112,3 +112,20 @@ function cron_import($period) {
 	elgg_set_ignore_access(false);
 	elgg_pop_context();
 }
+
+/**
+ * determine whether to send notifications from imports
+ */
+function notify_on_import() {
+    static $notify;
+    
+    if (!is_null($notify)) {
+        return $notify;
+    }
+    
+    $setting = elgg_get_plugin_setting('notify', PLUGIN_ID);
+    
+    $notify = ($setting === 'yes');
+    
+    return $notify;
+}

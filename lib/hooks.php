@@ -94,8 +94,10 @@ function rssimport_url($hook, $type, $return, $params) {
  */
 function prevent_notifications($hook, $type, $return, $params) {
 	if ($params['object']->rssimport_id || elgg_get_context() == 'rssimport') {
-		// this is an rssimport entity, we don't want to notify
-		return false;
+        if (!notify_on_import()) {
+            // this is an rssimport entity, we don't want to notify
+            return false;
+        }
 	}
 	
 	return $return;
