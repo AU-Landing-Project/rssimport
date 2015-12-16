@@ -102,3 +102,16 @@ function prevent_notifications($hook, $type, $return, $params) {
 	
 	return $return;
 }
+
+/**
+ * called on the forward plugin hook, prevents the forward
+ * 
+ * @param type $hook
+ * @param type $type
+ * @param type $return
+ * @param type $params
+ * @return boolean
+ */
+function prevent_forward($hook, $type, $return, $params) {
+    return false; // no forwarding
+}
