@@ -24,7 +24,7 @@ class RSSImport Extends \ElggObject {
 		}
 
 		// is this a cron call?
-		if (elgg_in_context() == 'cron') {
+		if (elgg_in_context('cron')) {
 			return true;
 		}
 
